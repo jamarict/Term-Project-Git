@@ -27,7 +27,7 @@ class Field(Tile):
 class Mountain(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "brown"
+        self.color = "black"
         self.name = "Mountain"
 
 # Forest Tiles hold their spcific resources and can be altered depending on
@@ -68,8 +68,8 @@ class Capital(City):
         self.color = "yellow"
 
 
-def getTile(board, yPos, xPos):
-    tilePiece = board[yPos][xPos]
+def getTile(board, xPos, yPos):
+    tilePiece = board[xPos][yPos]
     return type(tilePiece)
 
 def testTileClass():
@@ -99,7 +99,7 @@ def testMountainClass():
     assert(mountain1.x == 0)
     assert(mountain1.y == 0)
     assert(mountain1.unitOnTile == False)
-    assert(mountain1.color == "brown")
+    assert(mountain1.color == "black")
     print("Passed")
 
 testMountainClass()
