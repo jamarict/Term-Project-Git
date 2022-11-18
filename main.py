@@ -1,6 +1,7 @@
 from cmu_112_graphics import *
 from TilesClass import *
 from UnitClass import *
+from tempBoard import tempBoard
 
 capital1 = Capital(0,0)
 forest1 = Forest(0,1)
@@ -11,8 +12,8 @@ board = [[capital1, forest1],
 
 
 def getCellBounds(app, x, y):
-    margin = 500
-    gridHeight = app.height - 2 * margin
+    margin = 320
+    gridHeight = app.height - (2 * margin)
     cellHeight = gridHeight / len(board[0])
     x0 = margin + x * cellHeight
     y0 = margin + y * cellHeight
@@ -26,9 +27,9 @@ def drawCell(app, canvas, x, y, tile):
 
 
 def drawBoard(app, canvas):
-    for row in range(len(board)):
-        for col in range(len(board[0])):
-            drawCell(app, canvas, row, col, board[row][col])
+    for row in range(len(tempBoard)):
+        for col in range(len(tempBoard[0])):
+            drawCell(app, canvas, row, col, tempBoard[row][col])
 
 
 def redrawAll(app, canvas):
