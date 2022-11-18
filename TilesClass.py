@@ -10,13 +10,17 @@ class Tile(object):
         #Initialize every Tile as not having a unit on them
         self.unitOnTile = False
         self.containsRuin = False
+        self.name = ""
 
+    def __repr__(self):
+        return f"{self.name}"
 # Field Tiles contain specific resources & can have certain buildings built
 # on them
 class Field(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.color = "lightGreen"
+        self.name = "Field"
 
 # Mountain Tiles hold fewer resources & should make certain player movements
 # harder    
@@ -24,6 +28,7 @@ class Mountain(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.color = "brown"
+        self.name = "Mountain"
 
 # Forest Tiles hold their spcific resources and can be altered depending on
 # player upgrades
@@ -31,6 +36,7 @@ class Forest(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.color = "darkGreen"
+        self.name = "Forest"
 
 # Villages can be considered "pre-cities". They do not belong to a specific
 # and can be conquered. Once conquered, they become cities.
@@ -38,6 +44,7 @@ class Village(Tile):
     def __init__(self, x, y):
         super().__init__(x,y)
         self.containsRuin = False
+        self.name = "Village"
         
 # Cities are owned by player. Cities have specific levels, give players stars,
 # and level up. They can not contain ruins under any circumstance
@@ -49,6 +56,7 @@ class City(Tile):
         self.starsPerTurn = 1
         self.color = "red"
         self.containsRuin = False
+        self.name = "City"
 
 # Capitals are a special kind of city. Like the "home-base", each player starts
 # one capital per game and can not build any new ones. They give 2 stars/turn
@@ -56,11 +64,13 @@ class Capital(City):
     def __init__(self, x, y):
         super().__init__(x,y)
         self.starsPerTurn = 2
+        self.name = "Capital"
         self.color = "yellow"
 
 
-
-
+def getTile(board, yPos, xPos):
+    tilePiece = board[yPos][xPos]
+    return type(tilePiece)
 
 def testTileClass():
     print("Testing Tile Class...", end="\n")
@@ -71,7 +81,6 @@ def testTileClass():
     print("Passed")
 
 testTileClass()
-
 
 def testFieldClass():
     print("Testing Tile Class...", end="\n")
@@ -134,3 +143,21 @@ def testCapitalClass():
     print("Passed")
 
 testCityClass()
+
+def testGetTile():
+    print("Testing getTile...")
+    capital1 = Capital(0,0)
+    forest1 = Forest(0,1)
+    field1 = Field(1,0)
+    mountain1 = Mountain(1,1)
+    board = [ [capital1, forest1],
+              [field1, mountain1] ]
+    print(board)
+    assert(getTile(board, 0, 0) == Capital)
+    assert(getTile(board, 0, 1) == Forest)
+    assert(getTile(board, 1, 0) == Field)
+    assert(getTile(board, 1, 1) == Mountain)
+
+    print("Passed")
+
+testGetTile()
