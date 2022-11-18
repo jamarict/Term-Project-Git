@@ -32,6 +32,15 @@ class Forest(Tile):
         super().__init__(x, y)
         self.color = "darkGreen"
 
+# Villages can be considered "pre-cities". They do not belong to a specific
+# and can be conquered. Once conquered, they become cities.
+class Village(Tile):
+    def __init__(self, x, y):
+        super().__init__(x,y)
+        self.containsRuin = False
+        
+# Cities are owned by player. Cities have specific levels, give players stars,
+# and level up. They can not contain ruins under any circumstance
 class City(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -41,6 +50,8 @@ class City(Tile):
         self.color = "red"
         self.containsRuin = False
 
+# Capitals are a special kind of city. Like the "home-base", each player starts
+# one capital per game and can not build any new ones. They give 2 stars/turn
 class Capital(City):
     def __init__(self, x, y):
         super().__init__(x,y)
@@ -104,8 +115,9 @@ def testCityClass():
     assert(city1.popToNextLevel == 2)
     assert(city1.starsPerTurn == 1)
     assert(city1.unitOnTile == False)
+    assert(city1.containsRuin == False)
     assert(city1.color == "red")
-    print("Passed)")
+    print("Passed")
 
 testCityClass()
 
@@ -119,6 +131,6 @@ def testCapitalClass():
     assert(capital1.starsPerTurn == 2)
     assert(capital1.unitOnTile == False)
     assert(capital1.color == "yellow")
-    print("Passed)")
+    print("Passed")
 
 testCityClass()
