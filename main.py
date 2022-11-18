@@ -3,18 +3,10 @@ from TilesClass import *
 from UnitClass import *
 from tempBoard import tempBoard
 
-capital1 = Capital(0,0)
-forest1 = Forest(0,1)
-field1 = Field(1,0)
-mountain1 = Mountain(1,1)
-board = [[capital1, forest1],
-         [field1, mountain1]]
-
-
 def getCellBounds(app, x, y):
-    margin = 320
+    margin = 100
     gridHeight = app.height - (2 * margin)
-    cellHeight = gridHeight / len(board[0])
+    cellHeight = gridHeight / len(tempBoard)
     x0 = margin + x * cellHeight
     y0 = margin + y * cellHeight
     x1 = margin + (x + 1) * cellHeight
