@@ -9,6 +9,7 @@ class Tile(object):
         self.y = y
         #Initialize every Tile as not having a unit on them
         self.unitOnTile = False
+        self.containsRuin = False
 
 # Field Tiles contain specific resources & can have certain buildings built
 # on them
@@ -31,6 +32,20 @@ class Forest(Tile):
         super().__init__(x, y)
         self.color = "darkGreen"
 
+class City(Tile):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.level = 1
+        self.popToNextLevel = 2
+        self.starsPerTurn = 1
+        self.color = "red"
+        self.containsRuin = False
+
+class Capital(City):
+    def __init__(self, x, y):
+        super().__init__(x,y)
+        self.starsPerTurn = 2
+        self.color = "yellow"
 
 
 
@@ -60,22 +75,50 @@ testFieldClass()
 
 def testMountainClass():
     print("Testing Tile Class...", end="\n")
-    field1 = Field(3,4)
-    assert(field1.x == 3)
-    assert(field1.y == 4)
-    assert(field1.unitOnTile == False)
-    assert(field1.color == "lightGreen")
+    mountain1 = Mountain(0,0)
+    assert(mountain1.x == 0)
+    assert(mountain1.y == 0)
+    assert(mountain1.unitOnTile == False)
+    assert(mountain1.color == "brown")
     print("Passed")
 
 testMountainClass()
 
-def testFieldClass():
+def testForestClass():
     print("Testing Tile Class...", end="\n")
-    field1 = Field(3,4)
-    assert(field1.x == 3)
-    assert(field1.y == 4)
-    assert(field1.unitOnTile == False)
-    assert(field1.color == "lightGreen")
+    forest1 = Forest(10,11)
+    assert(forest1.x == 10)
+    assert(forest1.y == 11)
+    assert(forest1.unitOnTile == False)
+    assert(forest1.color == "darkGreen")
     print("Passed")
 
-testFieldClass()
+testForestClass()
+
+def testCityClass():
+    print("Testing City Class...", end="\n")
+    city1 = City(9,9)
+    assert(city1.x == 9)
+    assert(city1.y == 9)
+    assert(city1.level == 1)
+    assert(city1.popToNextLevel == 2)
+    assert(city1.starsPerTurn == 1)
+    assert(city1.unitOnTile == False)
+    assert(city1.color == "red")
+    print("Passed)")
+
+testCityClass()
+
+def testCapitalClass():
+    print("Testing Capital Class...", end="\n")
+    capital1 = Capital(3,3)
+    assert(capital1.x == 3)
+    assert(capital1.y == 3)
+    assert(capital1.level == 1)
+    assert(capital1.popToNextLevel == 2)
+    assert(capital1.starsPerTurn == 2)
+    assert(capital1.unitOnTile == False)
+    assert(capital1.color == "yellow")
+    print("Passed)")
+
+testCityClass()
