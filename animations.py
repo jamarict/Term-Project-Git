@@ -28,11 +28,10 @@ def getCell(app, x, y):
     gridHeight = app.height - 2*app.margin
     cellHeight = gridHeight / len(tempBoard)
     row = int((y-app.margin)/cellHeight)
-    col = int((x-(app.margin+app.addSpace))/cellHeight)
+    col = int((x-(app.margin+app.addSpace))/cellHeight) 
     if col == 11:
         col = 10
     return (row, col)
-
 
 
 def pointInGrid(app, x, y):
@@ -50,7 +49,7 @@ def drawBoard(app, canvas):
             drawCell(app, canvas, row, col, tempBoard[col][row])
 
 def drawAllUnits(app, canvas):
-    for item in app.unitsOnBoard:
+    for item in player1.currentUnits:
         x0, y0, x1, y1 = getCellBounds(app, item.y, item.x)
         item.redraw(app, canvas, x0, y0, x1, y1)
 
@@ -65,8 +64,12 @@ def mousePressed(app, event):
     print((row, col))
     currentTile = getTile(tempBoard,row, col)
     print(currentTile)
+    if isinstance(currentTile,City):
+        currentTile.spawnUnit()
+    print(player1.currentUnits)
 
 def playGame():
     runApp(width=1100, height=700)
 
 playGame()
+

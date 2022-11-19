@@ -14,6 +14,9 @@ class Unit(object):
         self.canMove = True
         self.canAttack = True
         self.canAct = True
+
+    def __repr__(self):
+        return "Warrior"
         
 
     def redraw (self, app, canvas, x0, y0, x1, y1):
