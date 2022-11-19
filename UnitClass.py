@@ -5,7 +5,7 @@ class Unit(object):
         self.x = x
         self.y = y
         self.cost = 2
-        self.health = 10
+        self.health = 10     
         self.attack = 2
         self.defense = 2
         self.movement = 1
@@ -14,6 +14,12 @@ class Unit(object):
         self.canMove = True
         self.canAttack = True
         self.canAct = True
+        
+
+    def redraw (self, app, canvas, x0, y0, x1, y1):
+        r = 5
+        canvas.create_oval(x0+r, y0+r, x1-r, y1-r, fill = self.color)
+
         
 
 

@@ -10,7 +10,6 @@ class Tile(object):
         #Initialize every Tile as not having a unit on them
         self.unitOnTile = False
         self.containsRuin = False
-        self.name = ""
 
     def __repr__(self):
         return f"{self.name}"
@@ -55,7 +54,7 @@ class City(Tile):
         self.level = 1
         self.popToNextLevel = 2
         self.starsPerTurn = 1
-        self.color = "red"
+        self.color = "orange"
         self.containsRuin = False
         self.name = "City"
 

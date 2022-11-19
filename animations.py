@@ -1,14 +1,13 @@
 from cmu_112_graphics import *
 from TilesClass import *
 from UnitClass import *
+from PlayerClass import *
 from tempBoard import *
 
 def appStarted(app):
     app.margin = 50
-    app.addSpace = abs(app.width - app.height)/2
-    unit1 = Unit(5,1)
-    unit2 = Unit(9,9)
-    app.unitsOnBoard = [unit1, unit2]
+    app.addSpace = (app.width - app.height)/2
+    app.unitsOnBoard = {}
     app.selection = (-1, -1)
 
 
@@ -27,9 +26,7 @@ def getCell(app, x, y):
     if (not pointInGrid(app, x, y)):
         return (-1, -1)
     gridHeight = app.height - 2*app.margin
-    gridWidth = app.width - 2*(app.addSpace+app.margin)
     cellHeight = gridHeight / len(tempBoard)
-    print(cellHeight)
     row = int((y-app.margin)/cellHeight)
     col = int((x-(app.margin+app.addSpace))/cellHeight)
     if col == 11:
@@ -52,14 +49,11 @@ def drawBoard(app, canvas):
         for col in range(len(tempBoard[0])):
             drawCell(app, canvas, row, col, tempBoard[col][row])
 
-def drawUnit(app, canvas, item):
-    x0, y0, x1, y1 = getCellBounds(app, item.y, item.x)
-    r = 5
-    canvas.create_oval(x0+r, y0+r,x1-r, y1-r, fill = item.color)
-
 def drawAllUnits(app, canvas):
     for item in app.unitsOnBoard:
-        drawUnit(app, canvas, item)
+        x0, y0, x1, y1 = getCellBounds(app, item.y, item.x)
+        item.redraw(app, canvas, x0, y0, x1, y1)
+
 
 def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill = "lightblue")
@@ -67,7 +61,6 @@ def redrawAll(app, canvas):
     drawAllUnits(app, canvas)
 
 def mousePressed(app, event):
-    print(event.x)
     (row, col) = getCell(app, event.x, event.y) 
     print((row, col))
     currentTile = getTile(tempBoard,row, col)
