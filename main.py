@@ -25,20 +25,21 @@ def getCellBounds(app, x, y):
 
 def getCell(app, x, y):
     if (not pointInGrid(app, x, y)):
-        print(-1, -1)
         return (-1, -1)
     gridHeight = app.height - 2*app.margin
     gridWidth = app.width - 2*(app.addSpace+app.margin)
     cellHeight = gridHeight / len(tempBoard)
+    print(cellHeight)
     row = int((y-app.margin)/cellHeight)
     col = int((x-(app.margin+app.addSpace))/cellHeight)
-    print(row, col)
+    if col == 11:
+        col = 10
     return (row, col)
 
 
 
 def pointInGrid(app, x, y):
-    return ((app.margin + app.addSpace <= x <= app.width - app.margin - app.addSpace)
+    return ((app.margin + app.addSpace <= x <= app.width - (app.margin + app.addSpace))
             and (app.margin <= y <= app.height - app.margin))
     
 def drawCell(app, canvas, x, y, tile):
@@ -66,9 +67,11 @@ def redrawAll(app, canvas):
     drawAllUnits(app, canvas)
 
 def mousePressed(app, event):
-    (row, col) = getCell(app, event.x, event.y)
-    app.selection = (row, col)
-
+    print(event.x)
+    (row, col) = getCell(app, event.x, event.y) 
+    print((row, col))
+    currentTile = getTile(tempBoard,row, col)
+    print(currentTile)
 
 def playGame():
     runApp(width=1100, height=700)

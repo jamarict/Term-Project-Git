@@ -70,6 +70,8 @@ class Capital(City):
 
 
 def getTile(board, xPos, yPos):
+    if (xPos, yPos) == (-1, -1):
+        return "Please Click on Board"
     tilePiece = board[xPos][yPos]
     return type(tilePiece)
 
