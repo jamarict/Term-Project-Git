@@ -1,7 +1,11 @@
+from cmu_112_graphics import *
 from TilesClass import *
-player1 = Player("Jamari")
-player2 = Player("Gabriel")
-player3 = Player("John")
+from UnitClass import *
+from PlayerClass import *
+
+player1 = Player("Player 1")
+player2 = Player("Player 2")
+player3 = Player("Player 3")
 tempBoard = [[Forest(0,0), Field(0, 1), Field(0,2), Mountain(0,3), Field(0,4), Forest(0,5), Field(0,6), Field(0,7), Field(0,8), Field(0,9), Field(0,10)],
              [Field(1,0), Mountain(1,1), Mountain(1,2), Forest(1,3), Forest(1,4), Forest(1,5), Field(1,6), Field(1,7), Forest(1,8), Forest(1,9), Field(1,10)],
              [Forest(2,0), City(2,1, player3), Forest(2,2), Field(2,3), Forest(2,4), Capital(2,5, player3), Forest(2,6), Forest(2,7), Field(2,8), Forest(2,9), Field(2,10)],
@@ -26,4 +30,46 @@ tempBoard = [[Forest(0,0), Field(0, 1), Field(0,2), Mountain(0,3), Field(0,4), F
 # print(recursivePrint(tempBoard))
 # print(len(tempBoard))
 
+# Helper function for print2dList.
+# This finds the maximum length of the string
+# representation of any item in the 2d list
+def maxItemLength(a):
+    maxLen = 0
+    for row in range(len(a)):
+        for col in range(len(a[row])):
+            maxLen = max(maxLen, len(repr(a[row][col])))
+    return maxLen
 
+def print2dList(a):
+    if a == []:
+        print([])
+        return
+    print()
+    rows, cols = len(a), len(a[0])
+    maxCols = max([len(row) for row in a])
+    fieldWidth = max(maxItemLength(a), len(f'col={maxCols-1}'))
+    rowLabelSize = 5 + len(str(rows-1))
+    rowPrefix = ' '*rowLabelSize+' '
+    rowSeparator = rowPrefix + '|' + ('-'*(fieldWidth+3) + '|')*maxCols
+    print(rowPrefix, end='  ')
+    # Prints the column labels centered
+    for col in range(maxCols):
+        print(f'col={col}'.center(fieldWidth+2), end='  ')
+    print('\n' + rowSeparator)
+    for row in range(rows):
+        # Prints the row labels
+        print(f'row={row}'.center(rowLabelSize), end=' | ')
+        # Prints each item of the row flushed-right but the same width
+        for col in range(len(a[row])):
+            print(repr(a[row][col]).center(fieldWidth+1), end=' | ')
+        # Prints out missing cells in each column in case the list is ragged
+        missingCellChar = chr(10006)
+        for col in range(len(a[row]), maxCols):
+            print(missingCellChar*(fieldWidth+1), end=' | ')
+        print('\n' + rowSeparator)
+    print()
+
+# Let's give the new function a try!
+a = [ [ 1, -1023, 3 ] , [ 4, 5, 678 ] ]
+b = [ [123, 4567, 891011], [567890, 'ABC'], ['Amazing!', True, '', -3.14, None]]
+print2dList(tempBoard)
