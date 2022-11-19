@@ -5,7 +5,6 @@ from PlayerClass import *
 from tempBoard import *
 
 def appStarted(app):
-    player1 = 
     app.margin = 50
     app.addSpace = (app.width - app.height)/2
     app.unitsOnBoard = {}
