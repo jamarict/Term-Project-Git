@@ -1,7 +1,7 @@
 import random
 
-playerColors = ["red", "green", "blue", "orange", "yellow", "purple", "black", 
-                "white", "pink", "brown"]
+playerColors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
+                "maroon", "orchid", "slateblue"]
 
 class Player(object):
     def __init__(self, name):
@@ -16,11 +16,3 @@ class Player(object):
 
     def __repr__(self):
         return f"{self.name} + {self.color}"
-
-allPlayers = []
-for i in range(10):
-    player = Player(f"{i+1}")
-    allPlayers.append(player)
-    
-print(allPlayers)
-
