@@ -18,7 +18,7 @@ class Tile(object):
 class Field(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "lightGreen"
+        self.color = "pale green"
         self.name = "Field"
 
 # Mountain Tiles hold fewer resources & should make certain player movements
@@ -26,7 +26,7 @@ class Field(Tile):
 class Mountain(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "brown"
+        self.color = "grey"
         self.name = "Mountain"
 
 # Forest Tiles hold their spcific resources and can be altered depending on
@@ -34,7 +34,7 @@ class Mountain(Tile):
 class Forest(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "darkGreen"
+        self.color = "forest green"
         self.name = "Forest"
 
 # Villages can be considered "pre-cities". They do not belong to a specific
@@ -43,7 +43,7 @@ class Village(Tile):
     def __init__(self, x, y):
         super().__init__(x,y)
         self.containsRuin = False
-        self.color = "black"
+        self.color = "burlywood"
         self.name = "Village"
         
 # Cities are owned by player. Cities have specific levels, give players stars,
@@ -54,7 +54,7 @@ class City(Tile):
         self.level = 1
         self.popToNextLevel = 2
         self.starsPerTurn = 1
-        self.color = "orange"
+        self.color = "yellow"
         self.containsRuin = False
         self.name = "City"
 
@@ -65,7 +65,7 @@ class Capital(City):
         super().__init__(x,y)
         self.starsPerTurn = 2
         self.name = "Capital"
-        self.color = "yellow"
+        self.color = "gold2"
 
 
 def getTile(board, xPos, yPos):
