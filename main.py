@@ -10,11 +10,12 @@ def appStarted(app):
 
 
 def getCellBounds(app, x, y):
-    margin = 100
+    margin = 50
+    addSpace = (app.width - app.height)/2
     gridHeight = app.height - (2 * margin)
     cellHeight = gridHeight / len(tempBoard[0])
-    x0 = margin + x * cellHeight
-    x1 = margin + (x + 1) * cellHeight
+    x0 = (margin + x * cellHeight)+addSpace
+    x1 = (margin + (x + 1) * cellHeight)+addSpace
     y0 = margin + y * cellHeight
     y1 = margin + (y + 1) * cellHeight
     return x0, y0, x1, y1
@@ -42,5 +43,8 @@ def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill = "lightblue")
     drawBoard(app, canvas)
     drawAllUnits(app, canvas)
+
+def mousePressed(app, event):
+    print(event.x, event.y)
 
 runApp(width=1100, height=700)
