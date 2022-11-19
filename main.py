@@ -4,14 +4,17 @@ from UnitClass import *
 from tempBoard import *
 
 def appStarted(app):
-    unit1 = Unit(5,3)
-    unit2 = Unit(9,10)
+    app.margin = 50
+    app.addSpace = abs(app.width - app.height)/2
+    unit1 = Unit(5,1)
+    unit2 = Unit(9,9)
     app.unitsOnBoard = [unit1, unit2]
+    app.selection = (-1, -1)
 
 
 def getCellBounds(app, x, y):
-    margin = 50
-    addSpace = (app.width - app.height)/2
+    margin = app.margin
+    addSpace = app.addSpace
     gridHeight = app.height - (2 * margin)
     cellHeight = gridHeight / len(tempBoard[0])
     x0 = (margin + x * cellHeight)+addSpace
@@ -19,6 +22,24 @@ def getCellBounds(app, x, y):
     y0 = margin + y * cellHeight
     y1 = margin + (y + 1) * cellHeight
     return x0, y0, x1, y1
+
+def getCell(app, x, y):
+    if (not pointInGrid(app, x, y)):
+        print(-1, -1)
+        return (-1, -1)
+    gridHeight = app.height - 2*app.margin
+    gridWidth = app.width - 2*(app.addSpace+app.margin)
+    cellHeight = gridHeight / len(tempBoard)
+    row = int((y-app.margin)/cellHeight)
+    col = int((x-(app.margin+app.addSpace))/cellHeight)
+    print(row, col)
+    return (row, col)
+
+
+
+def pointInGrid(app, x, y):
+    return ((app.margin + app.addSpace <= x <= app.width - app.margin - app.addSpace)
+            and (app.margin <= y <= app.height - app.margin))
     
 def drawCell(app, canvas, x, y, tile):
     x0, y0, x1, y1 = getCellBounds(app, x, y)
@@ -45,6 +66,11 @@ def redrawAll(app, canvas):
     drawAllUnits(app, canvas)
 
 def mousePressed(app, event):
-    print(event.x, event.y)
+    (row, col) = getCell(app, event.x, event.y)
+    app.selection = (row, col)
 
-runApp(width=1100, height=700)
+
+def playGame():
+    runApp(width=1100, height=700)
+
+playGame()
