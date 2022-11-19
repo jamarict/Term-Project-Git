@@ -11,3 +11,10 @@ class Unit(object):
         self.movement = 1
         self.range = 1
         self.color = "grey"
+        self.canMove = True
+        self.canAttack = True
+        self.canAct = True
+        
+
+
+    
