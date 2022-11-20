@@ -10,7 +10,6 @@ class Tile(object):
         self.y = y
         #Initialize every Tile as not having a unit on them
         self.unitOnTile = False
-        self.containsRuin = False
 
     def __repr__(self):
         return f"{self.name}"
@@ -43,7 +42,6 @@ class Forest(Tile):
 class Village(Tile):
     def __init__(self, x, y):
         super().__init__(x,y)
-        self.containsRuin = False
         self.color = "burlywood"
         self.name = "Village"
         
@@ -59,7 +57,6 @@ class City(Tile):
         self.popToNextLevel = 2
         self.starsPerTurn = 1
         self.color = player.color
-        self.containsRuin = False
         self.name = "City"
         self.canMakeUnits = True
 
