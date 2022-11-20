@@ -48,35 +48,27 @@ class Village(Tile):
 # Cities are owned by player. Cities have specific levels, give players stars,
 # and level up. They can not contain ruins under any circumstance
 class City(Tile):
-    def __init__(self, x, y, player):
+    def __init__(self, x, y):
         super().__init__(x, y)
-        player.currentCities.append(self)
-        self.player = player
-        self.namePlayer = player.name
         self.level = 1
         self.popToNextLevel = 2
         self.starsPerTurn = 1
-        self.color = player.color
         self.name = "City"
         self.canMakeUnits = True
 
     def __repr__(self):
-        return f"{self.namePlayer}'s {self.name}"
-
-
-    def spawnUnit(self):
-        newUnit = Unit(self.x, self.y)
-        self.player.currentUnits.append(newUnit)
-        
+        return f"{self.name}"
 
 
 # Capitals are a special kind of city. Like the "home-base", each player starts
 # one capital per game and can not build any new ones. They give 2 stars/turn
 class Capital(City):
-    def __init__(self, x, y, player):
-        super().__init__(x, y, player)
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.starsPerTurn = 2
-        self.name = "Capital"
+        self.unitOnTile = True
+        self.name = f"Capital"
+        self.color = "red"
 
 
 def getTile(board, xPos, yPos):

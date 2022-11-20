@@ -2,23 +2,28 @@ from cmu_112_graphics import *
 from TilesClass import *
 from UnitClass import *
 from PlayerClass import *
+import time
 from boardAlgorithm import *
 
-numOfPlayers = int(input("how many players are playing: "))
-playersList = []
-for i in range(numOfPlayers):
-    newPlayer = Player(f"Player {i}")
-    playersList.append(newPlayer)
-print(playersList)
+def createViableBoard(numOfPlayers, boardInput):
+    playersList = []
+    for i in range(numOfPlayers):
+        newPlayer = Player(f"Player {i}")
+        playersList.append(newPlayer)
 
-boardInput = input("what board Size would you like: ")
-if boardInput == "small":
-    boardSize = 11
-elif boardInput == "medium":
-    boardSize = 15 
-elif boardInput == "large":
-    boardSize = 19
- 
-finalBoard = makeBoard(playersList, boardSize)
+    if boardInput == "small":
+        boardSize = 11
+    elif boardInput == "medium":
+        boardSize = 15 
+    elif boardInput == "large":
+        boardSize = 19
+    
+    finalBoard, capitals = makeBoard(numOfPlayers, boardSize)
+    print2dList(finalBoard)
+    print(capitals)
+    return finalBoard
 
 
+board = createViableBoard(5, "small")
+
+    
