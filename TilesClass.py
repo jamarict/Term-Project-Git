@@ -22,7 +22,7 @@ class Field(Tile):
         self.name = "Field"
 
 # Mountain Tiles hold fewer resources & should make certain player movements
-# harder    
+# harder
 class Mountain(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -37,7 +37,7 @@ class Forest(Tile):
         self.color = "forest green"
         self.name = "Forest"
 
-# Villages can be considered "pre-cities". They do not belong to a specific
+# Villages can be considered "pre-cities". They do not belong to a specific player
 # and can be conquered. Once conquered, they become cities.
 class Village(Tile):
     def __init__(self, x, y):
@@ -46,7 +46,7 @@ class Village(Tile):
         self.name = "Village"
         
 # Cities are owned by player. Cities have specific levels, give players stars,
-# and level up. They can not contain ruins under any circumstance
+# and level up.
 class City(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -62,7 +62,7 @@ class City(Tile):
         return f"{self.name}"
 
 
-# Capitals are a special kind of city. Like the "home-base", each player starts
+# Capitals are a special kind of city. Like the "home-base", each player starts with
 # one capital per game and can not build any new ones. They give 2 stars/turn
 class Capital(City):
     def __init__(self, x, y):
@@ -72,7 +72,7 @@ class Capital(City):
         self.name = "Capital"
         self.color = "yellow"
 
-
+# returns the Tile repr based on given x & y grid coordinates
 def getTile(board, xPos, yPos):
     if (xPos, yPos) == (-1, -1):
         return "Please Click on Board"

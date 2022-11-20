@@ -4,6 +4,7 @@ from UnitClass import *
 from PlayerClass import *
 from NewConsoleTest import *
 
+#Initialize player colors, current players, and margins
 def appStarted(app):
     app.board, app.players = createViableBoard(7, "large")
     app.colors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
@@ -18,6 +19,8 @@ def appStarted(app):
     app.unitsOnBoard = {}
     app.selection = (-1, -1)
 
+# returns cell coordinates for drawing grid and units
+# From cmu_112
 def getCellBounds(app, x, y):
     margin = app.margin
     addSpace = app.addSpace
@@ -29,6 +32,7 @@ def getCellBounds(app, x, y):
     y1 = margin + (y + 1) * cellHeight
     return x0, y0, x1, y1
 
+# returns row and col number based on mousepress coordinates
 def getCell(app, x, y):
     if (not pointInGrid(app, x, y)):
         return (-1, -1)
@@ -39,22 +43,24 @@ def getCell(app, x, y):
     if col == 11:
         col = 10
     return (row, col)
-
+# reutns True/False depending on if a point is on a grid
 def pointInGrid(app, x, y):
     return ((app.margin + app.addSpace <= x <= app.width - (app.margin + app.addSpace))
             and (app.margin <= y <= app.height - app.margin))
 
-
+# draws cell based on row, col, and tile color
 def drawCell(app, canvas, x, y, tile):
     x0, y0, x1, y1 = getCellBounds(app, x, y)
     canvas.create_rectangle(x0, y0, x1, y1, fill = tile.color)
     canvas.create_text((x0+x1)/2,(y0+y1)/2, text = f"({tile.x},{tile.y})")
 
+# Loops through board to draw board
 def drawBoard(app, canvas):
     for row in range(len(app.board)):
         for col in range(len(app.board[0])):
             drawCell(app, canvas, row, col, app.board[col][row])
 
+# draws units based on current units for each player
 def drawAllUnits(app, canvas):
     for player in app.players:
         for unit in player.currentUnits:
@@ -65,6 +71,7 @@ def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill = "lightblue")
     drawBoard(app, canvas)
     drawAllUnits(app, canvas)
+
 
 def mousePressed(app, event):
     (row, col) = getCell(app, event.x, event.y) 
