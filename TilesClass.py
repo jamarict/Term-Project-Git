@@ -55,6 +55,8 @@ class City(Tile):
         self.starsPerTurn = 1
         self.name = "City"
         self.canMakeUnits = True
+        self.unitOnTile = True
+
 
     def __repr__(self):
         return f"{self.name}"
@@ -69,7 +71,6 @@ class Capital(City):
         self.unitOnTile = True
         self.name = "Capital"
         self.color = "yellow"
-        self.unitOnTile = True
 
 
 def getTile(board, xPos, yPos):
