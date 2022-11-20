@@ -4,7 +4,8 @@ from UnitClass import *
 from PlayerClass import *
 from NewConsoleTest import *
 
-#Initialize player colors, current players, and margins
+# Initialize player colors, current players, and margins
+# Colors from http://cs111.wellesley.edu/archive/cs111_fall14/public_html/labs/lab12/tkintercolor.html
 def appStarted(app):
     app.board, app.players = createViableBoard(5, "small")
     app.colors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
@@ -20,7 +21,7 @@ def appStarted(app):
     app.selection = (-1, -1)
 
 # returns cell coordinates for drawing grid and units
-# From cmu_112
+# From https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
 def getCellBounds(app, x, y):
     margin = app.margin
     addSpace = app.addSpace
@@ -33,6 +34,7 @@ def getCellBounds(app, x, y):
     return x0, y0, x1, y1
 
 # returns row and col number based on mousepress coordinates
+# From https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
 def getCell(app, x, y):
     if (not pointInGrid(app, x, y)):
         return (-1, -1)
@@ -47,6 +49,7 @@ def getCell(app, x, y):
 def pointInGrid(app, x, y):
     return ((app.margin + app.addSpace <= x <= app.width - (app.margin + app.addSpace))
             and (app.margin <= y <= app.height - app.margin))
+
 
 # draws cell based on row, col, and tile color
 def drawCell(app, canvas, x, y, tile):

@@ -1,7 +1,9 @@
 from PlayerClass import*
 from TilesClass import*
 import random
+################################################################################
 
+# Helper functions to print 2d List
 # from https://www.cs.cmu.edu/~112/notes/notes-2d-lists.html#printing
 def maxItemLength(a):
     maxLen = 0
@@ -39,6 +41,8 @@ def print2dList(a):
         print('\n' + rowSeparator)
     print()
 
+################################################################################
+#Board Generation
 
 # main function that repeatedly tries to make a valid board
 # A valid board is a board where none of the capitals have overlapping 3x3 regions
@@ -100,7 +104,11 @@ def isLegalMove(currentCapital, currentCapitals):
             return False
     return True
 
+
+
 # Random number generation to determine Tile Type
+# Website to determine bounds:
+# https://polytopia.fandom.com/wiki/Map_Generation
 def tileSelector(x, y):
     tile = random.random()
     if (0 <= tile < .20):

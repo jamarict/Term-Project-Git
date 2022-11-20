@@ -1,5 +1,8 @@
+###############################################################################
 # Units are movable warriors that the player controls. There is a generic unit
 # that has the following stats. Special units have specific stats and abilities
+# Stats obtained from:
+# https://polytopia.fandom.com/wiki/List_of_Units
 class Unit(object):
     def __init__(self, x, y):
         self.x = x

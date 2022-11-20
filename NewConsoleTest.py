@@ -4,10 +4,10 @@ from UnitClass import *
 from PlayerClass import *
 import time
 from boardAlgorithm import *
+################################################################################
 
-#2d Console Style To Test game initialization
-
-#Creates a viable map with boardAlgorithm. Requires number of player inpute and board size
+# Console Style To Test game initialization
+# Creates a viable map with boardAlgorithm. Requires number of player inpute and board size
 def createViableBoard(numOfPlayers, boardInput):
     # Store current players
     playersList = []
