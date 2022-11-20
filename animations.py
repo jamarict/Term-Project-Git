@@ -6,7 +6,7 @@ from NewConsoleTest import *
 
 #Initialize player colors, current players, and margins
 def appStarted(app):
-    app.board, app.players = createViableBoard(7, "large")
+    app.board, app.players = createViableBoard(5, "small")
     app.colors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
                 "maroon", "orchid", "slateblue"]
     for player in app.players:
