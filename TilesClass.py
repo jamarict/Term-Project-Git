@@ -67,8 +67,9 @@ class Capital(City):
         super().__init__(x, y)
         self.starsPerTurn = 2
         self.unitOnTile = True
-        self.name = f"Capital"
-        self.color = "red"
+        self.name = "Capital"
+        self.color = "yellow"
+        self.unitOnTile = True
 
 
 def getTile(board, xPos, yPos):

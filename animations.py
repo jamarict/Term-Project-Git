@@ -4,16 +4,19 @@ from UnitClass import *
 from PlayerClass import *
 from NewConsoleTest import *
 
-
 def appStarted(app):
-    app.playerColors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
+    app.board, app.players = createViableBoard(7, "large")
+    app.colors = ["navy", "yellow", "salmon", "red", "deep pink", "dark violet", "chocolate", 
                 "maroon", "orchid", "slateblue"]
-    app.board = createViableBoard(5, "small")
+    for player in app.players:
+        index = random.randint(0,len(app.colors)-1)
+        player.color = app.colors.pop(index)
+        player.currentCities[0].color = player.color
+    currentPlayer = 0
     app.margin = 50
     app.addSpace = (app.width - app.height)/2
     app.unitsOnBoard = {}
     app.selection = (-1, -1)
-
 
 def getCellBounds(app, x, y):
     margin = app.margin
@@ -37,14 +40,9 @@ def getCell(app, x, y):
         col = 10
     return (row, col)
 
-
 def pointInGrid(app, x, y):
     return ((app.margin + app.addSpace <= x <= app.width - (app.margin + app.addSpace))
             and (app.margin <= y <= app.height - app.margin))
-
-def keyPressed(app, event):
-    if event.key == "r":
-        app.board = createViableBoard(5, "small")
 
 
 def drawCell(app, canvas, x, y, tile):
@@ -57,21 +55,20 @@ def drawBoard(app, canvas):
         for col in range(len(app.board[0])):
             drawCell(app, canvas, row, col, app.board[col][row])
 
-# def drawAllUnits(app, canvas):
-#     for item in player1.currentUnits:
-#         x0, y0, x1, y1 = getCellBounds(app, item.y, item.x)
-#         item.redraw(app, canvas, x0, y0, x1, y1)
-
+def drawAllUnits(app, canvas):
+    for player in app.players:
+        for unit in player.currentUnits:
+            x0, y0, x1, y1 = getCellBounds(app, unit.y, unit.x)
+            unit.redraw(app, canvas, x0, y0, x1, y1)
 
 def redrawAll(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill = "lightblue")
     drawBoard(app, canvas)
-    # drawAllUnits(app, canvas)
+    drawAllUnits(app, canvas)
 
 def mousePressed(app, event):
     (row, col) = getCell(app, event.x, event.y) 
-    currentTile = getTile(app.board,row, col)    
-
+    currentTile = getTile(app.board,row, col) 
 
 def playGame():
     runApp(width=1100, height=700)
@@ -79,3 +76,4 @@ def playGame():
 playGame()
 
 
+ 

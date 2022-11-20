@@ -2,6 +2,7 @@ from PlayerClass import*
 from TilesClass import*
 import random
 
+# from https://www.cs.cmu.edu/~112/notes/notes-2d-lists.html#printing
 def maxItemLength(a):
     maxLen = 0
     for row in range(len(a)):
@@ -39,19 +40,23 @@ def print2dList(a):
     print()
 
 
-
+# main function that repeatedly tries to make a valid board
+# A valid board is a board where none of the capitals have overlapping 3x3 regions
 def makeBoard(numOfPlayers, size):
     newBoard = None
     while newBoard == None:
         oldBoard = [[None for i in range(size)] for j in range(size)]
-        possibleMoves = set()
-        currentCapitals = set()
+        possibleMoves = list()
+        currentCapitals = list()
+        # Shrink range by 1 so no capitals spawn on outer edge of map
         for i in range(1,size-1):
             for j in range(1,size-1):
-                possibleMoves.add((i,j))
+                possibleMoves.append((i,j))
+        # Backtracking Helper that adds capitals to board. Returns board and capital locations
         newBoard = makeCapitalsHelper(numOfPlayers, possibleMoves, oldBoard, currentCapitals)
     board = newBoard[0]
     capitals = newBoard[1]
+    # Create new Tile if current Tile is not a capital
     for i in range(size):
         for j in range(size):
             if isinstance(board[i][j], Capital):
@@ -61,31 +66,41 @@ def makeBoard(numOfPlayers, size):
                 board[i][j] = newTile
     return board, capitals
 
+# recursive function that puts capitals in random positions
 def makeCapitalsHelper(numOfPlayers, possibleMoves, oldBoard, currentCapitals):
+    # Base case when there's no more players to account for
     if numOfPlayers == 0:
         return oldBoard, currentCapitals
     else:
+        # Check through possible moves
         for i in range(len(possibleMoves)):
-            currentCapital = random.choice(list(possibleMoves))
+            # Instead of systemically going theough each row & col, choose a random one
+            currentCapital = random.choice(possibleMoves)
+            # legality check
             if isLegalMove(currentCapital, currentCapitals):
-                x = Capital(currentCapital[0], currentCapital[1])
-                oldBoard[currentCapital[0]][currentCapital[1]] = x
+                #Create Capital Tile, put it on the board, then remove it as a possible move
+                capitalTile = Capital(currentCapital[0], currentCapital[1])
+                oldBoard[currentCapital[0]][currentCapital[1]] = capitalTile
                 possibleMoves.remove(currentCapital)
-                currentCapitals.add(x)
+                currentCapitals.append(capitalTile)
+                # Recursion
                 result = makeCapitalsHelper(numOfPlayers-1, possibleMoves, oldBoard, currentCapitals)
                 if result != None:
                     return result
         return None
 
+# Legality check that uses pythagorean theorem to estimate the distance between capitals
+# Distance must be above 4 to be considered legal.
 def isLegalMove(currentCapital, currentCapitals):
     if len(currentCapitals) < 1:
         return True
     capX, capY = currentCapital[0], currentCapital[1]
-    for item in currentCapitals:
+    for item in currentCapitals: #Check each capital
         if int(((item.x - capX)**2 + (item.y-capY)**2)**0.5) <= 4:
             return False
     return True
 
+# Random number generation to determine Tile Type
 def tileSelector(x, y):
     tile = random.random()
     if (0 <= tile < .20):
