@@ -3,6 +3,7 @@ from TilesClass import *
 from UnitClass import *
 from PlayerClass import *
 from NewConsoleTest import *
+from screens import *
 
 # Initialize player colors, current players, and margins
 # Colors from http://cs111.wellesley.edu/archive/cs111_fall14/public_html/labs/lab12/tkintercolor.html
@@ -19,6 +20,7 @@ def appStarted(app):
     app.addSpace = (app.width - app.height)/2
     app.unitsOnBoard = {}
     app.selection = (-1, -1)
+    app.titleScreen = titleScreen
 
 # returns cell coordinates for drawing grid and units
 # From https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
@@ -83,6 +85,8 @@ def mousePressed(app, event):
 def keyPressed(app, event):
     if event.key == "r":
         app.board, app.players = createViableBoard(5, "small")
+    elif event.key == "b":
+        app.mode = "titleScreenMode"
 
 def playGame():
     runApp(width=1100, height=700)
