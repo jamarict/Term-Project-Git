@@ -5,6 +5,10 @@ class Button(object):
         self.text = text
         self.f = function
 
+    def redraw(self, app, canvas):
+        canvas.create_text(self.x, self.y, text = f"{self.text}", font = "FixedSys 20")
+
+
 
 
 class CircleButton(Button):
@@ -20,7 +24,7 @@ class CircleButton(Button):
     def redraw(self, app, canvas):
         x0, y0, x1, y1 = self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r
         canvas.create_oval(x0, y0, x1, y1, fill = "yellow")
-        canvas.create_text(self.x, self.y, text = f"{self.text}")
+        super().redraw(app, canvas)
 
 class RectangleButton(Button):
     def __init__(self, x, y, width, height, text, function):
@@ -37,10 +41,15 @@ class RectangleButton(Button):
     
     def redraw(self, app, canvas):
         canvas.create_rectangle(self.leftBound, self.upperBound, self.rightBound, self.lowerBound, fill = "red")
-        canvas.create_text(self.x, self.y, text = f"{self.text}")
+        super().redraw(app, canvas)
+
 
 
 def backToMain(app):
-    app.mode = None
+    app.mode = "setupMode"
 def goToTitle(app):
     app.mode = "titleScreenMode" 
+def goToHelp(app):
+    app.mode = "helpScreenMode"
+def goToSettings(app):
+    app.mode = "settingsScreenMode"
