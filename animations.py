@@ -20,7 +20,6 @@ def appStarted(app):
     app.addSpace = (app.width - app.height)/2
     app.unitsOnBoard = {}
     app.selection = (-1, -1)
-    app.titleScreen = titleScreen
 
 # returns cell coordinates for drawing grid and units
 # From https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
