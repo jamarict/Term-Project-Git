@@ -9,7 +9,6 @@ class Tile(object):
         self.x = x
         self.y = y
         #Initialize every Tile as not having a unit on them
-        self.unitOnTile = False
 
     def __repr__(self):
         return f"{self.name}"

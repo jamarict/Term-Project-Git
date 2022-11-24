@@ -80,6 +80,10 @@ def mousePressed(app, event):
     (row, col) = getCell(app, event.x, event.y) 
     currentTile = getTile(app.board,row, col) 
 
+def keyPressed(app, event):
+    if event.key == "r":
+        app.board, app.players = createViableBoard(5, "small")
+
 def playGame():
     runApp(width=1100, height=700)
 
