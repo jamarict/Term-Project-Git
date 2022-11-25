@@ -51,7 +51,7 @@ def printPlayerStatus(players):
 
 
 #Testing initialization and unit movement
-board, players = createViableBoard(3, "small")
+board, players = createViableBoard(14, "large")
 print2dList(board)
 currentPlayer = 0
 printPlayerStatus(players)
