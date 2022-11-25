@@ -22,8 +22,9 @@ def appStarted(app):
     app.buttonHelp = CircleButton(app.width*(2/4), app.yPos, app.bigButtonDims, "Help", goToHelp, "Gold3")
     app.buttonSetting = CircleButton(app.width*(3/4), app.yPos, app.bigButtonDims, "Settings", goToSettings, "midnightblue")
     app.buttonTitle = CircleButton(app.width*(1/4), app.yPos, app.bigButtonDims, "Back to\n Title", goToTitle, "Black")
-    app.playerNum = "No Players Set"
-    app.mapSize = "No Size Selected"
+    app.playerNum = 0
+    app.mapSize = 0
+    app.mapText = "No"
     app.setupButtons = []
     for col in range(1,3):
         for row in range(1,4):
@@ -64,7 +65,6 @@ def setupMode_redrawAll(app, canvas):
     app.buttonTitle.redraw(app, canvas)
     for button in app.setupButtons:
         button.redraw(app, canvas)
-        print(button.numSet)
 
         
 def setupMode_mousePressed(app, event):
@@ -73,5 +73,7 @@ def setupMode_mousePressed(app, event):
         button.buttonPressed(app, event)
     
 
+def setupMode_timerFired(app):
+    print(app.playerNum, app.mapSize, app.mapText)
     
 runApp(width =1100, height = 700)
