@@ -37,7 +37,7 @@ def drawSettingsScreen(app, canvas):
     canvas.create_image(app.cx, app.cy, image=ImageTk.PhotoImage(app.titleScreen))
     canvas.create_rectangle(app.width*(1/10), app.height*(1/10), app.width*(9/10), app.height*(9/10), fill = "sienna4")
     canvas.create_text(app.cx,app.height*(3/20), text = "Settings", font = "FixedSys 40 bold", fill = textColor)
-    canvas.create_text(app.cx,app.cy, text = "Feature Coming Soon!", font = "FixedSys 40 bold", fill = textColor)
+    canvas.create_text(app.cx,app.cy, text = "Features Coming Soon!", font = "FixedSys 40 bold", fill = textColor)
 
 def drawSetupScreen(app, canvas):
     textColor = "red4"

@@ -37,23 +37,44 @@ class RectangleButton(Button):
         self.rightBound = self.x + width
         self.upperBound = self.y - height
         self.lowerBound = self.y + height
-        print(self.leftBound, self.rightBound, self.upperBound, self.lowerBound)
     
     def buttonPressed(self, app, event):
         if (self.leftBound <= event.x <= self.rightBound) and (self.upperBound <= event.y <= self.lowerBound):
-            self.f(app)
+            self.functionCall(app)
+    
+    def functionCall(self, app):
+        self.f(app, self.numSets)
     
     def redraw(self, app, canvas):
         canvas.create_rectangle(self.leftBound, self.upperBound, self.rightBound, self.lowerBound, fill = "sienna3")
         super().redraw(app, canvas)
 
-class ParameterButton(CircleButton):
+class ParameterCircButton(CircleButton):
     def __init__(self, x, y, r, text, function, number, color):
-        super().__initII(x, y, r, text, function, color)
+        super().__init__(x, y, r, text, function, color)
         self.numSet = number
 
     def functionCall(self, app):
         self.f(app, self.numSet)
+        
+class ParameterRectButton(RectangleButton):
+    def __init__(self, x, y, width, height, text, function, number, color):
+        super().__init__(x, y, width, height, text, function, color)
+        self.numSet = number
+        if number == 1:
+            self.text = "Small"
+            self.numSet = 11
+        elif number == 2:
+            self.text = "Medium"
+            self.numSet = 15
+        elif number == 3:
+            self.text = "Large"
+            self.numSet = 19
+
+
+    def functionCall(self, app):
+        self.f(app, self.numSet)
+
 
 
 
@@ -71,4 +92,6 @@ def goToHelp(app):
 def goToSettings(app):
     app.mode = "settingsScreenMode"
 def setParameter(app, number):
-    app.playersNum = number
+    app.playerNum = number
+def setMapSize(app, number):
+    app.mapSize = number
