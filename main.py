@@ -1,6 +1,6 @@
 from cmu_112_graphics import *
 from ButtonClass import *
-from screens import *
+from ScreenDrawings import *
 ################################################################################
 
 def appStarted(app):
@@ -18,7 +18,6 @@ def appStarted(app):
                    1/10, 9/10, 3/20, 9/40, 19/40, 11/15, 12/15, 13/15)
     app.bigButtonDimensions = 70
     app.numButtonDimensions = 40
-
     
     #Initial Buttons
     app.buttonPlayGame = CircleButton(app.width * app.xScalar[0], 
