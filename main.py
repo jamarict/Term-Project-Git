@@ -1,39 +1,80 @@
 from cmu_112_graphics import *
 from ButtonClass import *
 from screens import *
-
-
+################################################################################
 
 def appStarted(app):
-    #Title Screen images
+    #Image Info
     app.imageTitleScreen = app.loadImage("images/openBackground.jpeg")
     titleScale = 1200/433 
     app.titleScreen = app.scaleImage(app.imageTitleScreen, titleScale)
     app.mode = "titleScreenMode"
 
-
-    #button Info
+    #Positioning Info
     app.cx = app.width/2
     app.cy = app.height/2
-    app.yPos = app.height*(11/14)
-    app.bigButtonDims = 70
-    app.numButtonDims = 40
-    app.buttonPlayGame = CircleButton(app.width/4, app.yPos, app.bigButtonDims, "Play\nGame", backToMain, "red4")
-    app.buttonHelp = CircleButton(app.width*(2/4), app.yPos, app.bigButtonDims, "Help", goToHelp, "Gold3")
-    app.buttonSetting = CircleButton(app.width*(3/4), app.yPos, app.bigButtonDims, "Settings", goToSettings, "midnightblue")
-    app.buttonTitle = CircleButton(app.width*(1/4), app.yPos, app.bigButtonDims, "Back to\n Title", goToTitle, "Black")
+    app.xButtonScalar = (0.25, 0.5, 0.75, 1/11, 1/6, 10/12, 1/10, 9/10)
+    app.yButtonScalar = (11/14, 1/11, 2/15, 1/7, 3/5, 1/28, 5/24, 3/8, 7/24, 
+                         1/10, 9/10, 3/20, 9/40, 19/40)
+    app.bigButtonDimensions = 70
+    app.numButtonDimensions = 40
+
+    
+    #Initial Buttons
+    app.buttonPlayGame = CircleButton(app.width * app.xButtonScalar[0], 
+                                      app.height * app.yButtonScalar[0], 
+                                      app.bigButtonDimensions, "Play\nGame", 
+                                      backToMain, "red4")
+    
+    app.buttonHelp = CircleButton(app.width * app.xButtonScalar[1], 
+                                  app.height * app.yButtonScalar[0], 
+                                  app.bigButtonDimensions, "Help", 
+                                  goToHelp, "Gold3")
+    
+    app.buttonSetting = CircleButton(app.width * app.xButtonScalar[2], 
+                                     app.height * app.yButtonScalar[0], 
+                                     app.bigButtonDimensions, "Settings", 
+                                     goToSettings, "midnightblue")
+    
+    app.buttonTitle = CircleButton(app.width * app.xButtonScalar[0], 
+                                   app.height * app.yButtonScalar[0], 
+                                   app.bigButtonDimensions, "Back to\n Title", 
+                                   goToTitle, "Black")
+
+    app.buttonStartGame = CircleButton(app.width * app.xButtonScalar[2], 
+                                      app.height * app.yButtonScalar[0], 
+                                      app.bigButtonDimensions, 
+                                      " Start \n Game", startGame, "green4")
+    
+    
+    #Set List-Based Buttons
+    app.setupButtons = []
+    for col in range(1,3):
+        for row in range(1,4): # Player Number
+            num = row + 3 * (col-1)
+            app.setupButtons.append(ParameterCircButton(app.width * app.xButtonScalar[0] * row, 
+                                                        app.height * app.yButtonScalar[2] * col + (app.height * app.yButtonScalar[3]), 
+                                                        app.numButtonDimensions, 
+                                                        f"{num}", setParameter,
+                                                        num, "red4"))
+    for row in range(1,4): # Map Size
+        app.setupButtons.append(ParameterRectButton(app.width * app.xButtonScalar[0] * row, 
+                                                    app.height * app.yButtonScalar[4], 
+                                                    app.width * app.xButtonScalar[3], app.height * app.yButtonScalar[5], 
+                                                    f"{row}", setMapSize, row, "red4"))
+    
+
+    #Initial Game Information
     app.playerNum = 0
     app.mapSize = 0
     app.mapText = "No"
-    app.setupButtons = []
-    for col in range(1,3):
-        for row in range(1,4):
-            num = row + 3 * (col-1)
-            app.setupButtons.append(ParameterCircButton(app.width*(3/12)*(row), app.height*(2/15)*(col)+100, app.numButtonDims, f"{num}", setParameter, num, "red4"))
-    for row in range(1,4):
-        app.setupButtons.append(ParameterRectButton(app.width*(3/12)*(row), app.height*(9/15), 100, 25, f"{row}", setMapSize, row, "red4"))
+    app.suggestionText = ""
 
- 
+################################################################################   
+
+#Screen Redraws and mousePressed
+
+#Title Screen  
 def titleScreenMode_redrawAll(app, canvas):
     drawTitle(app, canvas)
     app.buttonPlayGame.redraw(app, canvas)
@@ -46,6 +87,7 @@ def titleScreenMode_mousePressed(app, event):
     app.buttonSetting.buttonPressed(app, event)
 
     
+# Help Screen   
 def helpScreenMode_redrawAll(app, canvas):
     drawHelpScreen(app, canvas)
     app.buttonTitle.redraw(app, canvas)
@@ -53,6 +95,8 @@ def helpScreenMode_redrawAll(app, canvas):
 def helpScreenMode_mousePressed(app, event):
     app.buttonTitle.buttonPressed(app, event)
 
+    
+# Settings Screen 
 def settingsScreenMode_redrawAll(app, canvas):
     drawSettingsScreen(app, canvas)
     app.buttonTitle.redraw(app, canvas)
@@ -60,20 +104,20 @@ def settingsScreenMode_redrawAll(app, canvas):
 def settingsScreenMode_mousePressed(app, event):
     app.buttonTitle.buttonPressed(app, event)
 
+
+# Game Setup Screen
 def setupMode_redrawAll(app, canvas):
     drawSetupScreen(app, canvas)
     app.buttonTitle.redraw(app, canvas)
     for button in app.setupButtons:
         button.redraw(app, canvas)
-
-        
+    app.buttonStartGame.redraw(app, canvas)
+  
 def setupMode_mousePressed(app, event):
     app.buttonTitle.buttonPressed(app, event)
     for button in app.setupButtons:
         button.buttonPressed(app, event)
-    
+    app.buttonStartGame.buttonPressed(app, event)
 
-def setupMode_timerFired(app):
-    print(app.playerNum, app.mapSize, app.mapText)
     
 runApp(width =1100, height = 700)
