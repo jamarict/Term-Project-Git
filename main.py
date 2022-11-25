@@ -13,36 +13,36 @@ def appStarted(app):
     #Positioning Info
     app.cx = app.width/2
     app.cy = app.height/2
-    app.xButtonScalar = (0.25, 0.5, 0.75, 1/11, 1/6, 10/12, 1/10, 9/10)
-    app.yButtonScalar = (11/14, 1/11, 2/15, 1/7, 3/5, 1/28, 5/24, 3/8, 7/24, 
-                         1/10, 9/10, 3/20, 9/40, 19/40)
+    app.xScalar = (0.25, 0.5, 0.75, 1/11, 1/6, 10/12, 1/10, 9/10)
+    app.yScalar = (11/14, 1/11, 2/15, 1/7, 3/5, 1/28, 5/24, 3/8, 7/24, 
+                   1/10, 9/10, 3/20, 9/40, 19/40, 11/15, 12/15, 13/15)
     app.bigButtonDimensions = 70
     app.numButtonDimensions = 40
 
     
     #Initial Buttons
-    app.buttonPlayGame = CircleButton(app.width * app.xButtonScalar[0], 
-                                      app.height * app.yButtonScalar[0], 
+    app.buttonPlayGame = CircleButton(app.width * app.xScalar[0], 
+                                      app.height * app.yScalar[0], 
                                       app.bigButtonDimensions, "Play\nGame", 
                                       backToMain, "red4")
     
-    app.buttonHelp = CircleButton(app.width * app.xButtonScalar[1], 
-                                  app.height * app.yButtonScalar[0], 
+    app.buttonHelp = CircleButton(app.width * app.xScalar[1], 
+                                  app.height * app.yScalar[0], 
                                   app.bigButtonDimensions, "Help", 
                                   goToHelp, "Gold3")
     
-    app.buttonSetting = CircleButton(app.width * app.xButtonScalar[2], 
-                                     app.height * app.yButtonScalar[0], 
+    app.buttonSetting = CircleButton(app.width * app.xScalar[2], 
+                                     app.height * app.yScalar[0], 
                                      app.bigButtonDimensions, "Settings", 
                                      goToSettings, "midnightblue")
     
-    app.buttonTitle = CircleButton(app.width * app.xButtonScalar[0], 
-                                   app.height * app.yButtonScalar[0], 
+    app.buttonTitle = CircleButton(app.width * app.xScalar[0], 
+                                   app.height * app.yScalar[0], 
                                    app.bigButtonDimensions, "Back to\n Title", 
                                    goToTitle, "Black")
 
-    app.buttonStartGame = CircleButton(app.width * app.xButtonScalar[2], 
-                                      app.height * app.yButtonScalar[0], 
+    app.buttonStartGame = CircleButton(app.width * app.xScalar[2], 
+                                      app.height * app.yScalar[0], 
                                       app.bigButtonDimensions, 
                                       " Start \n Game", startGame, "green4")
     
@@ -52,15 +52,18 @@ def appStarted(app):
     for col in range(1,3):
         for row in range(1,4): # Player Number
             num = row + 3 * (col-1)
-            app.setupButtons.append(ParameterCircButton(app.width * app.xButtonScalar[0] * row, 
-                                                        app.height * app.yButtonScalar[2] * col + (app.height * app.yButtonScalar[3]), 
+            app.setupButtons.append(ParameterCircButton(app.width * app.xScalar
+    [0] * row, 
+                                                        app.height * app.yScalar[2] * col + (app.height * app.yScalar[3]), 
                                                         app.numButtonDimensions, 
                                                         f"{num}", setParameter,
                                                         num, "red4"))
     for row in range(1,4): # Map Size
-        app.setupButtons.append(ParameterRectButton(app.width * app.xButtonScalar[0] * row, 
-                                                    app.height * app.yButtonScalar[4], 
-                                                    app.width * app.xButtonScalar[3], app.height * app.yButtonScalar[5], 
+        app.setupButtons.append(ParameterRectButton(app.width * app.xScalar
+[0] * row, 
+                                                    app.height * app.yScalar[4], 
+                                                    app.width * app.xScalar
+                                            [3], app.height * app.yScalar[5], 
                                                     f"{row}", setMapSize, row, "red4"))
     
 
