@@ -3,7 +3,7 @@ from TilesClass import *
 from UnitClass import *
 from PlayerClass import *
 from NewConsoleTest import *
-from screens import *
+from ScreenDrawings import *
 
 # Initialize player colors, current players, and margins
 # Colors from http://cs111.wellesley.edu/archive/cs111_fall14/public_html/labs/lab12/tkintercolor.html
