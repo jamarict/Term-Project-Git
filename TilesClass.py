@@ -1,5 +1,3 @@
-from PlayerClass import *
-from UnitClass import *
 ################################################################################
 
 # Tiles make up the map of the game. No matter what kind of Tile, grid position

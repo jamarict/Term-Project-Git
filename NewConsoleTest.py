@@ -3,7 +3,7 @@ from TilesClass import *
 from UnitClass import *
 from PlayerClass import *
 import time
-from boardAlgorithm import *
+from BoardAlgorithm import *
 ################################################################################
 
 # Console Style To Test game initialization
@@ -51,7 +51,7 @@ def printPlayerStatus(players):
 
 
 #Testing initialization and unit movement
-board, players = createViableBoard(12, "large")
+board, players = createViableBoard(13, "large")
 print2dList(board)
 currentPlayer = 0
 printPlayerStatus(players)
