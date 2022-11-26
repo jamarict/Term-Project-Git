@@ -41,70 +41,104 @@ def print2dList(a):
         print('\n' + rowSeparator)
     print()
 
+def print2dDict(a):
+    bestRow = -1
+    bestCol = -1
+    for key in a:
+        if key[0] > bestRow:
+            bestRow = key[0]
+        if key[1] > bestCol:
+            bestCol = key[1]
+    rows, cols = bestRow + 1, bestCol + 1
+    print(rows, cols)
+
 ################################################################################
 #Board Generation
 
+
+
+    # # Create new Tile if current Tile is not a capital
+    # for i in range(size):
+    #     for j in range(size):
+    #         if isinstance(board[i][j], Capital):
+    #             continue
+    #         else:
+    #             newTile = tileSelector(i, j)
+    #             board[i][j] = newTile
+    # return board, capitals
+
 # main function that repeatedly tries to make a valid board
 # A valid board is a board where none of the capitals have overlapping 3x3 regions
-def makeBoard(numOfPlayers, size):
+def makeBoard(playerNum, mapSize):
     newBoard = None
     while newBoard == None:
-        oldBoard = [[None for i in range(size)] for j in range(size)]
+        oldBoard = dict() #Store Map as a dictionary with coordinate keys
         possibleMoves = list()
-        currentCapitals = list()
+        currentCities = list()
         # Shrink range by 1 so no capitals spawn on outer edge of map
-        for i in range(1,size-1):
-            for j in range(1,size-1):
-                possibleMoves.append((i,j))
+        for row in range(1, mapSize - 1):
+            for col in range(1, mapSize -1):
+                possibleMoves.append((row, col))
+        # Set Total Possible Cities Based on Map Size
+        if mapSize == 11:
+            totalCities = 5
+        elif mapSize == 15:
+            totalCities = 9
+        elif mapSize == 19:
+            totalCities = 13
         # Backtracking Helper that adds capitals to board. Returns board and capital locations
-        newBoard = makeCapitalsHelper(numOfPlayers, possibleMoves, oldBoard, currentCapitals)
+        newBoard = makeCapitalsHelper(playerNum, totalCities, possibleMoves, 
+                                      oldBoard, currentCities)
     board = newBoard[0]
     capitals = newBoard[1]
-    # Create new Tile if current Tile is not a capital
-    for i in range(size):
-        for j in range(size):
-            if isinstance(board[i][j], Capital):
+    for row in range(mapSize):
+        for col in range(mapSize):
+            key = (row, col)
+            if key in board:
                 continue
             else:
-                newTile = tileSelector(i, j)
-                board[i][j] = newTile
+                newTile = tileSelector(row, col)
+                board[key] = newTile
     return board, capitals
 
-# recursive function that puts capitals in random positions
-def makeCapitalsHelper(numOfPlayers, possibleMoves, oldBoard, currentCapitals):
-    # Base case when there's no more players to account for
-    if numOfPlayers == 0:
-        return oldBoard, currentCapitals
+# recursive function that puts capitals and villages in random positions
+def makeCapitalsHelper(playerNum, totalCities, possibleMoves, oldBoard, currentCities):
+    # Base case when there's no more cities
+    if totalCities == 0:
+        return oldBoard, currentCities
     else:
         # Check through possible moves
         for i in range(len(possibleMoves)):
-            # Instead of systemically going theough each row & col, choose a random one
-            currentCapital = random.choice(possibleMoves)
-            # legality check
-            if isLegalMove(currentCapital, currentCapitals):
-                #Create Capital Tile, put it on the board, then remove it as a possible move
-                capitalTile = Capital(currentCapital[0], currentCapital[1])
-                oldBoard[currentCapital[0]][currentCapital[1]] = capitalTile
-                possibleMoves.remove(currentCapital)
-                currentCapitals.append(capitalTile)
+            currentLocation = random.choice(possibleMoves)
+            currentLocationX, currentLocationY = currentLocation[0], currentLocation[1]
+            # Legality Check
+            if isLegalMove(currentLocationX, currentLocationY, currentCities):
+                if playerNum > 0:
+                    #Create Capital Tile for unaccounted Players
+                    currentTile = Capital(currentLocationX, currentLocationY)
+                else:
+                    #Create Empty Village Tile once all players have a capital
+                    currentTile = Village(currentLocationX, currentLocationY)
+                #Update Board and Remove Move
+                oldBoard[(currentLocationX, currentLocationY)] = currentTile
+                possibleMoves.remove(currentLocation)
+                currentCities.append(currentTile)
                 # Recursion
-                result = makeCapitalsHelper(numOfPlayers-1, possibleMoves, oldBoard, currentCapitals)
+                result = makeCapitalsHelper(playerNum - 1, totalCities - 1, 
+                                            possibleMoves, oldBoard, currentCities)
                 if result != None:
                     return result
         return None
 
-# Legality check that uses pythagorean theorem to estimate the distance between capitals
+# Legality check that uses pythagorean theorem to estimate the distance between cities
 # Distance must be above 4 to be considered legal.
-def isLegalMove(currentCapital, currentCapitals):
-    if len(currentCapitals) < 1:
+def isLegalMove(cx, cy, currentCities):
+    if len(currentCities) < 1:
         return True
-    capX, capY = currentCapital[0], currentCapital[1]
-    for item in currentCapitals: #Check each capital
-        if int(((item.x - capX)**2 + (item.y-capY)**2)**0.5) <= 4:
+    for item in currentCities: #Check each capital/village
+        if int(((item.x - cx)**2 + (item.y-cy)**2)**0.5) <= 4:
             return False
     return True
-
-
 
 # Random number generation to determine Tile Type
 # Website to determine bounds:

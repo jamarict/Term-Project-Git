@@ -77,5 +77,6 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
                        text = app.suggestionText, font = "FixedSys 15 bold", 
                        fill = textColor)
 
-
-
+def drawInPlayScreen(app, canvas):
+    textColor = "black"
+    canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))

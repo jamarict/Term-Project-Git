@@ -1,5 +1,7 @@
-# Button Classes to handle mouse interactions
+from GameClass import *
 
+
+# Button Classes to handle mouse interactions
 class Button(object):
     def __init__(self, x, y, text, function, color):
         self.x = x
@@ -127,20 +129,25 @@ def startGame(app): # Check Pre-Game Conditions
             app.suggestionText = "Select Players"
             return
         elif app.playerNum >= 3:
-            app.suggestionText = "Select Less Players"
+            app.suggestionText = "Select Less Players or Bigger Map"
             return
     elif app.mapSize == 15:
         if app.playerNum == 0:
             app.suggestionText = "Select Players"
             return
         elif app.playerNum >= 5:
-            app.suggestionText = "Select Less Players"
+            app.suggestionText = "Select Less Players or Bigger Map"
             return
     elif app.mapSize == 19:
         if app.playerNum == 0:
             app.suggestionText = "Select Players"
             return
-    app.suggestionText = "All Good :)"
+    if app.playerNum == 1:
+        app.game = vsCPU(1, app.mapSize)
+    else:
+        app.game = multiplayer(app.playerNum, app.mapSize)
+    app.mode = "inPlayScreenMode"
+
         
 
         

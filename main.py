@@ -121,5 +121,11 @@ def setupMode_mousePressed(app, event):
         button.buttonPressed(app, event)
     app.buttonStartGame.buttonPressed(app, event)
 
+def inPlayScreenMode_redrawAll(app, canvas):
+    drawInPlayScreen(app, canvas)
+
+def inPlayScreenMode_mousePressed(app, canvas):
+    print(app.game, app.playerNum, app.mapSize)
+
     
 runApp(width =1100, height = 700)
