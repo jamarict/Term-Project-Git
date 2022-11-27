@@ -80,3 +80,26 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
 def drawInPlayScreen(app, canvas):
     textColor = "black"
     canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
+
+def drawBoard(app, canvas):
+    for x in range(app.mapSize):
+        for y in range(app.mapSize):
+            drawCell(app, canvas, x, y, app.game.map[(y,x)])
+
+def drawCell(app, canvas, x, y, tile):
+    x0, y0, x1, y1 = getCellBounds(app, x, y)
+    canvas.create_rectangle(x0, y0, x1, y1, width = 3, fill = tile.color)
+    canvas.create_text((x0+x1)/2, (y0+y1)/2)
+
+def getCellBounds(app, x, y):
+    margin = 200
+    gridLength = app.height
+    cellLength = gridLength / app.mapSize
+    x0 = margin + (x * cellLength)
+    y0 = y * cellLength
+    x1 = margin + (x + 1) * cellLength
+    y1 = (y + 1) * cellLength
+    return x0, y0, x1, y1
+
+
+

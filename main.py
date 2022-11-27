@@ -51,15 +51,13 @@ def appStarted(app):
     for col in range(1,3):
         for row in range(1,4): # Player Number
             num = row + 3 * (col-1)
-            app.setupButtons.append(ParameterCircButton(app.width * app.xScalar
-    [0] * row, 
+            app.setupButtons.append(ParameterCircButton(app.width * app.xScalar[0] * row, 
                                                         app.height * app.yScalar[2] * col + (app.height * app.yScalar[3]), 
                                                         app.numButtonDimensions, 
                                                         f"{num}", setParameter,
                                                         num, "red4"))
     for row in range(1,4): # Map Size
-        app.setupButtons.append(ParameterRectButton(app.width * app.xScalar
-[0] * row, 
+        app.setupButtons.append(ParameterRectButton(app.width * app.xScalar[0] * row, 
                                                     app.height * app.yScalar[4], 
                                                     app.width * app.xScalar
                                             [3], app.height * app.yScalar[5], 
@@ -123,9 +121,11 @@ def setupMode_mousePressed(app, event):
 
 def inPlayScreenMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
+    drawBoard(app, canvas)
+
 
 def inPlayScreenMode_mousePressed(app, canvas):
-    print(app.game, app.playerNum, app.mapSize)
+    pass
 
     
 runApp(width =1100, height = 700)
