@@ -13,8 +13,8 @@ class Tile(object):
     def __repr__(self):
         return f"{self.name}"
     
-    def redraw(self, app, canvas):
-        pass
+    def redraw(self, app, canvas, x0, y0, x1, y1):
+        canvas.create_rectangle(x0, y0, x1, y1, width = 3, fill = self.color)
 
 
 # Field Tiles contain specific resources & can have certain buildings built
