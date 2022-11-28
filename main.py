@@ -129,5 +129,7 @@ def inPlayScreenMode_redrawAll(app, canvas):
 def inPlayScreenMode_mousePressed(app, event):
     (row, col) = checkClick(app, event.x, event.y)
     print(app.game.getTile(row, col))
+    print(app.game.getUnit(row, col))
+    
 
 runApp(width =1100, height = 700)
