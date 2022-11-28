@@ -1,3 +1,4 @@
+import random
 ################################################################################
 
 # Tiles make up the map of the game. No matter what kind of Tile, grid position
@@ -6,10 +7,16 @@ class Tile(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.resource = None
         #Initialize every Tile as not having a unit on them
 
     def __repr__(self):
         return f"{self.name}"
+    
+    def redraw(self, app, canvas, x0, y0, x1, y1):
+        canvas.create_rectangle(x0, y0, x1, y1, width = 3, fill = self.color)
+
+
 # Field Tiles contain specific resources & can have certain buildings built
 # on them
 class Field(Tile):
@@ -17,6 +24,21 @@ class Field(Tile):
         super().__init__(x, y)
         self.color = "pale green"
         self.name = "Field"
+        self.resource = self.spawnResources()
+
+    def spawnResources(self):
+        num = random.random()
+        if (0 <= num < 0.28):
+            self.name = self.name + " fruit"
+            return "fruit"
+        elif (0.28 <= num < 0.56):
+            self.name = self.name + " crop"
+            return "crop"
+        else:
+            return None
+            
+
+    
 
 # Mountain Tiles hold fewer resources & should make certain player movements
 # harder
@@ -25,6 +47,15 @@ class Mountain(Tile):
         super().__init__(x, y)
         self.color = "grey"
         self.name = "Mountain"
+        self.resource = self.spawnResources()
+    
+    def spawnResources(self):
+        num = random.random()
+        if (0 <= num < 0.50):
+            self.name = self.name + " metal"
+            return "metal"
+        else:
+            return None
 
 # Forest Tiles hold their spcific resources and can be altered depending on
 # player upgrades
@@ -33,6 +64,15 @@ class Forest(Tile):
         super().__init__(x, y)
         self.color = "forest green"
         self.name = "Forest"
+        self.resource = self.spawnResources()
+
+    def spawnResources(self):    
+        num = random.random()
+        if (0 <= num < 0.33):
+            self.name = self.name + " animal"
+            return "animal"
+        else:
+            return None
 
 # Villages can be considered "pre-cities". They do not belong to a specific player
 # and can be conquered. Once conquered, they become cities.
@@ -52,7 +92,6 @@ class City(Tile):
         self.starsPerTurn = 1
         self.name = "City"
         self.canMakeUnits = True
-        self.unitOnTile = True
 
 
     def __repr__(self):
@@ -65,13 +104,5 @@ class Capital(City):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.starsPerTurn = 2
-        self.unitOnTile = True
         self.name = "Capital"
         self.color = "yellow"
-
-# returns the Tile repr based on given x & y grid coordinates
-def getTile(board, xPos, yPos):
-    if (xPos, yPos) == (-1, -1):
-        return "Please Click on Board"
-    tilePiece = board[xPos][yPos]
-    return tilePiece

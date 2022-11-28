@@ -1,6 +1,6 @@
 from cmu_112_graphics import *
 from ButtonClass import *
-from ScreenDrawings import *
+from Screen import *
 ################################################################################
 
 def appStarted(app):
@@ -9,6 +9,7 @@ def appStarted(app):
     titleScale = 1200/433 
     app.titleScreen = app.scaleImage(app.imageTitleScreen, titleScale)
     app.mode = "titleScreenMode"
+    app.margin = 200
 
     #Positioning Info
     app.cx = app.width/2
@@ -23,7 +24,7 @@ def appStarted(app):
     app.buttonPlayGame = CircleButton(app.width * app.xScalar[0], 
                                       app.height * app.yScalar[0], 
                                       app.bigButtonDimensions, "Play\nGame", 
-                                      backToMain, "red4")
+                                      goToSetup, "red4")
     
     app.buttonHelp = CircleButton(app.width * app.xScalar[1], 
                                   app.height * app.yScalar[0], 
@@ -51,15 +52,13 @@ def appStarted(app):
     for col in range(1,3):
         for row in range(1,4): # Player Number
             num = row + 3 * (col-1)
-            app.setupButtons.append(ParameterCircButton(app.width * app.xScalar
-    [0] * row, 
+            app.setupButtons.append(ParameterCircButton(app.width * app.xScalar[0] * row, 
                                                         app.height * app.yScalar[2] * col + (app.height * app.yScalar[3]), 
                                                         app.numButtonDimensions, 
                                                         f"{num}", setParameter,
                                                         num, "red4"))
     for row in range(1,4): # Map Size
-        app.setupButtons.append(ParameterRectButton(app.width * app.xScalar
-[0] * row, 
+        app.setupButtons.append(ParameterRectButton(app.width * app.xScalar[0] * row, 
                                                     app.height * app.yScalar[4], 
                                                     app.width * app.xScalar
                                             [3], app.height * app.yScalar[5], 
@@ -123,9 +122,14 @@ def setupMode_mousePressed(app, event):
 
 def inPlayScreenMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
+    drawBoard(app, canvas)
+    drawUnits(app, canvas)
 
-def inPlayScreenMode_mousePressed(app, canvas):
-    print(app.game, app.playerNum, app.mapSize)
 
+def inPlayScreenMode_mousePressed(app, event):
+    (row, col) = checkClick(app, event.x, event.y)
+    print(app.game.getTile(row, col))
+    print(app.game.getUnit(row, col))
     
+
 runApp(width =1100, height = 700)

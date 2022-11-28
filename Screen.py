@@ -80,3 +80,51 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
 def drawInPlayScreen(app, canvas):
     textColor = "black"
     canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
+
+def drawBoard(app, canvas):
+    for x in range(app.mapSize):
+        for y in range(app.mapSize):
+            drawCell(app, canvas, x, y, app.game.map[(y,x)])
+
+def drawUnits(app, canvas):
+    for item in app.game.unitsOnBoard:
+        (y, x) = item
+        drawUnit(app, canvas, x, y, app.game.unitsOnBoard[item])
+
+def drawUnit(app, canvas, x, y, unit):
+    x0, y0, x1, y1 = getCellBounds(app, x, y)
+    unit.redraw(app, canvas, x0, y0, x1, y1)
+
+def drawCell(app, canvas, x, y, tile):
+    x0, y0, x1, y1 = getCellBounds(app, x, y)
+    tile.redraw(app, canvas, x0, y0, x1, y1)
+
+def getCellBounds(app, x, y):
+    gridLength = app.height
+    cellLength = gridLength / app.mapSize
+    x0 = app.margin + (x * cellLength)
+    y0 = y * cellLength
+    x1 = app.margin + (x + 1) * cellLength
+    y1 = (y + 1) * cellLength
+    return x0, y0, x1, y1
+
+
+def checkClick(app, mouseX, mouseY):
+    (row, col) = getCell(app, mouseX, mouseY)
+    return (row, col)
+    
+
+
+def getCell(app, x, y):
+    if (not pointInGrid(app, x, y)):
+        return (-1, -1)
+    gridLength = app.height
+    cellLength = gridLength / app.mapSize
+    row = int(y / cellLength)
+    col = int((x - app.margin) / cellLength) 
+    if col == app.mapSize:
+        col -= 1
+    return (row, col)
+
+def pointInGrid(app, x, y):
+    return (app.margin <= x <= app.width - app.margin) and (0 <= y <= app.height)

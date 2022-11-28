@@ -1,6 +1,5 @@
 from GameClass import *
 
-
 # Button Classes to handle mouse interactions
 class Button(object):
     def __init__(self, x, y, text, function, color):
@@ -93,7 +92,7 @@ class ParameterRectButton(RectangleButton): # Converting to Map Metrics
 
 #Button Functions
 
-def backToMain(app): # Reset going back to Title
+def goToSetup(app): # Reset going back to Title
     app.playerNum = 0
     app.mapSize = 0
     app.mapText = "No"

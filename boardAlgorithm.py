@@ -3,44 +3,6 @@ from TilesClass import*
 import random
 ################################################################################
 
-# Helper functions to print 2d List
-# from https://www.cs.cmu.edu/~112/notes/notes-2d-lists.html#printing
-def maxItemLength(a):
-    maxLen = 0
-    for row in range(len(a)):
-        for col in range(len(a[row])):
-            maxLen = max(maxLen, len(repr(a[row][col])))
-    return maxLen
-
-def print2dList(a):
-    if a == []:
-        print([])
-        return
-    print()
-    rows, cols = len(a), len(a[0])
-    maxCols = max([len(row) for row in a])
-    fieldWidth = max(maxItemLength(a), len(f'col={maxCols-1}'))
-    rowLabelSize = 5 + len(str(rows-1))
-    rowPrefix = ' '*rowLabelSize+' '
-    rowSeparator = rowPrefix + '|' + ('-'*(fieldWidth+3) + '|')*maxCols
-    print(rowPrefix, end='  ')
-    # Prints the column labels centered
-    for col in range(maxCols):
-        print(f'col={col}'.center(fieldWidth+2), end='  ')
-    print('\n' + rowSeparator)
-    for row in range(rows):
-        # Prints the row labels
-        print(f'row={row}'.center(rowLabelSize), end=' | ')
-        # Prints each item of the row flushed-right but the same width
-        for col in range(len(a[row])):
-            print(repr(a[row][col]).center(fieldWidth+1), end=' | ')
-        # Prints out missing cells in each column in case the list is ragged
-        missingCellChar = chr(10006)
-        for col in range(len(a[row]), maxCols):
-            print(missingCellChar*(fieldWidth+1), end=' | ')
-        print('\n' + rowSeparator)
-    print()
-
 def print2dDict(a):
     bestRow = -1
     bestCol = -1
@@ -50,7 +12,30 @@ def print2dDict(a):
         if key[1] > bestCol:
             bestCol = key[1]
     rows, cols = bestRow + 1, bestCol + 1
-    print(rows, cols)
+    fieldWidth = 20
+    rowLabelSize = 5 + len(str(rows-1))
+    rowPrefix = ' '*rowLabelSize+' '
+    rowSeparator = rowPrefix + '|' + ('-'*(fieldWidth+3) + '|')* cols
+    print(rowPrefix, end='  ')
+    # Prints the column labels centered
+    for col in range(cols):
+        print(f'col={col}'.center(fieldWidth+2), end='  ')
+    print('\n' + rowSeparator)
+    for row in range(rows):
+        # Prints the row labels
+        print(f'row={row}'.center(rowLabelSize), end=' | ')
+        # Prints each item of the row flushed-right but the same width
+        for col in range(cols):
+            print(repr(a[(row, col)]).center(fieldWidth+1), end=' | ')
+        print('\n' + rowSeparator)
+    print()
+
+
+
+
+
+
+
 
 ################################################################################
 #Board Generation
@@ -151,3 +136,4 @@ def tileSelector(x, y):
         return Forest(x, y)
     else:
         return Field(x, y)
+    
