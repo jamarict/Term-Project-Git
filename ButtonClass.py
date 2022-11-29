@@ -25,6 +25,7 @@ class CircleButton(Button):
         d = ((self.x - event.x) ** 2 + (self.y - event.y) ** 2)**0.5
         if d <= self.r:
             self.functionCall(app)
+            return True
             
     def functionCall(self, app):
         self.f(app)
@@ -69,7 +70,6 @@ class ParameterCircButton(CircleButton):
     def functionCall(self, app):
         self.f(app, self.numSet)
 
-   
 class ParameterRectButton(RectangleButton): # Converting to Map Metrics
     def __init__(self, x, y, width, height, text, function, number, color):
         super().__init__(x, y, width, height, text, function, color)
@@ -141,17 +141,46 @@ def startGame(app): # Check Pre-Game Conditions
         if app.playerNum == 0:
             app.suggestionText = "Select Players"
             return
-    if app.playerNum == 1:
+    if app.playerNum == 1: # Make single-player game w/CPU
         app.game = vsCPU(1, app.mapSize)
-    else:
+    else: # Make local multiplayer game
         app.game = multiplayer(app.playerNum, app.mapSize)
     app.mode = "inPlayScreenMode"
 
-        
+def moveUnit(app):
+    print("working")
 
-        
-        
-        
-    
+def attackUnit(app):
+    print("something")
 
-    
+def createUnit(app):
+    print("somewhere")
+
+def captureCity(app):
+    app.game.currentPlayer.addCity(app.game, app.tile)
+    app.clickedUnit.canAct = False
+
+def harvestResource(app):
+    if app.game.currentPlayer.currency >= 1:
+        app.game.currentPlayer.currency -= 1
+        app.tile.resource = None
+        app.targetTile.popToNextLevel -= 1
+        if app.targetTile.popToNextLevel == 0:
+            app.targetTile.level += 1
+            app.targetTile.starsPerTurn += 1
+            app.targetTile.popToNextLevel = app.targetTile.level + 1
+    else:
+        print("not enough stars :/")
+
+def createHouse(app):
+    if app.game.currentPlayer.currency >= 2 and app.tile.hasHouse == False:
+        app.game.currentPlayer.currency -= 2
+        app.tile.hasHouse = True
+        app.targetTile.popToNextLevel -= 2
+        if app.targetTile.popToNextLevel <= 0:
+            extra = 0 - app.targetTile.popToNextLevel
+            app.targetTile.level += 1
+            app.targetTile.starsPerTurn += 1
+            app.targetTile.popToNextLevel = app.targetTile.level + 1 - extra
+    else:
+        print("not enough stars :/")

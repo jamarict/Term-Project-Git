@@ -8,12 +8,12 @@ class Unit(object):
         self.x = x
         self.y = y
         self.color = "red"
+        self.canAct = False
 
     def __repr__(self):
         return f"Warrior({self.x, self.y}"
     
 
-        
     #units redraw themselves based on getCellBounds outputs
     def redraw (self, app, canvas, x0, y0, x1, y1):
         r = 5

@@ -1,8 +1,8 @@
 from cmu_112_graphics import *
+from ButtonClass import *
 ################################################################################
 
 #In-Game Texts and Screens
-
 def drawTitle(app, canvas):
     canvas.create_image(app.cx, app.cy, image=ImageTk.PhotoImage(app.titleScreen))
     canvas.create_rectangle(app.width * app.xScalar[4], app.height * app.yScalar[6], 
@@ -78,13 +78,34 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
                        fill = textColor)
 
 def drawInPlayScreen(app, canvas):
-    textColor = "black"
     canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
+    canvas.create_rectangle(app.width * 1/30, app.height * 1/10, app.width * 7/30, app.height * 9/10, fill = "sienna4")
+    canvas.create_rectangle(app.width * 3/60, app.height * 3/20, app.width * 13/60, app.height * 17/20, fill = "bisque")
+    canvas.create_text(app.width * 4/30, app.height * 5/40, text = "Game Info", font = "FixedSys 30 bold", fill = "floral white")
+    canvas.create_text(app.width * 4/30, app.height * 7/40, text = "Number of Players:", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 10/40, text = f"{len(app.game.playerList)}", font = "FixedSys 30 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 14/40, text = "Current Player's Turn:", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 17/40, text = f"{app.game.currentPlayer}", font = "FixedSys 30 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 21/40, text = f"{app.game.currentPlayer} City Count:", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 24/40, text = f"{len(app.game.currentPlayer.currentCities)}", font = "FixedSys 30 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 28/40, text = f"{app.game.currentPlayer} Unit Count:", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 31/40, text = f"{len(app.game.currentPlayer.currentUnits)}", font = "FixedSys 30 bold", fill = "black")
+    
 
-def drawBoard(app, canvas):
+
+
+
+
+
+
+def drawBoard(app, canvas): # Draws game board, from https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
     for x in range(app.mapSize):
         for y in range(app.mapSize):
             drawCell(app, canvas, x, y, app.game.map[(y,x)])
+            
+def drawCell(app, canvas, x, y, tile): # Draws individual cell based on bounds, from https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
+    x0, y0, x1, y1 = getCellBounds(app, x, y)
+    tile.redraw(app, canvas, x0, y0, x1, y1)
 
 def drawUnits(app, canvas):
     for item in app.game.unitsOnBoard:
@@ -95,11 +116,7 @@ def drawUnit(app, canvas, x, y, unit):
     x0, y0, x1, y1 = getCellBounds(app, x, y)
     unit.redraw(app, canvas, x0, y0, x1, y1)
 
-def drawCell(app, canvas, x, y, tile):
-    x0, y0, x1, y1 = getCellBounds(app, x, y)
-    tile.redraw(app, canvas, x0, y0, x1, y1)
-
-def getCellBounds(app, x, y):
+def getCellBounds(app, x, y): # Finds cell bounds for drawing, from https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
     gridLength = app.height
     cellLength = gridLength / app.mapSize
     x0 = app.margin + (x * cellLength)
@@ -108,14 +125,11 @@ def getCellBounds(app, x, y):
     y1 = (y + 1) * cellLength
     return x0, y0, x1, y1
 
-
-def checkClick(app, mouseX, mouseY):
+def checkClick(app, mouseX, mouseY): # Verifies mouse click on screen
     (row, col) = getCell(app, mouseX, mouseY)
     return (row, col)
     
-
-
-def getCell(app, x, y):
+def getCell(app, x, y): # Retrieves row and col numbers based on mouse click, from https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
     if (not pointInGrid(app, x, y)):
         return (-1, -1)
     gridLength = app.height
@@ -126,5 +140,59 @@ def getCell(app, x, y):
         col -= 1
     return (row, col)
 
-def pointInGrid(app, x, y):
+def pointInGrid(app, x, y): # Returns true of mouse click is inside board, from https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
     return (app.margin <= x <= app.width - app.margin) and (0 <= y <= app.height)
+
+def makeButtonHub(app):
+    buttonDims = 70
+    buttonList = []
+    x = app.tile.x
+    y = app.tile.y
+    if (x,y) in app.game.unitsOnBoard and app.game.unitsOnBoard[(x, y)] in app.game.currentPlayer.currentUnits:
+        app.clickedUnit = app.game.unitsOnBoard[(x, y)]
+        if app.clickedUnit.canAct == False:
+            pass
+        else:
+            moveUnitButton = CircleButton(app.width * 16/20, app.height * 3/20, buttonDims, "Move\nUnit", moveUnit, "black")
+            attackUnitButton = CircleButton(app.width * 37/40, app.height * 3/20, buttonDims, "Attack\n Unit", attackUnit, "black")
+            buttonList.append(moveUnitButton)
+            buttonList.append(attackUnitButton)
+            if isinstance(app.tile, Village) or ((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)):
+                captureCityButton = CircleButton(app.width * 16/20, app.height * 8/20, buttonDims, "Capture\n City", captureCity, "black")
+                buttonList.append(captureCityButton)
+    if isinstance(app.tile, City):
+        if (x,y) in app.game.unitsOnBoard:
+            pass
+        elif app.tile not in app.game.currentPlayer.currentCities:
+            pass
+        else:
+            createUnitButton = CircleButton(app.width * 37/40, app.height * 8/20, buttonDims, "Create\n Unit", createUnit, "black")
+            buttonList.append(createUnitButton)
+    if app.tile.resource != None and cityCheck(app)[0]:
+        app.targetTile = cityCheck(app)[1]
+        harvestResourceButton = CircleButton(app.width * 16/20, app.height * 13/20, buttonDims, " Harvest\nResource", harvestResource, "black")
+        buttonList.append(harvestResourceButton)
+    if isinstance(app.tile, Field) and cityCheck(app)[0]:
+        app.targetTile = cityCheck(app)[1]
+        if app.tile.hasHouse == False:
+            createHouseButton = CircleButton(app.width * 37/40, app.height * 13/20, buttonDims, "Create\nHouse", createHouse, "black")
+            buttonList.append(createHouseButton)
+    return buttonList
+
+
+def cityCheck(app):
+    x = app.tile.x
+    y = app.tile.y
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            newX = x + dx
+            newY = y + dy
+            if newX < 0 or newX >= app.mapSize or newY < 0 or newY >= app.mapSize:
+                continue
+            targetTile = app.game.map[(newX, newY)]
+            if isinstance(targetTile, City):
+                if targetTile in app.game.currentPlayer.currentCities:
+                    return True, targetTile
+    return False, None
+
+            

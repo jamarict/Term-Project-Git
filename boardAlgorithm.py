@@ -1,56 +1,7 @@
-from PlayerClass import*
 from TilesClass import*
 import random
 ################################################################################
-
-def print2dDict(a):
-    bestRow = -1
-    bestCol = -1
-    for key in a:
-        if key[0] > bestRow:
-            bestRow = key[0]
-        if key[1] > bestCol:
-            bestCol = key[1]
-    rows, cols = bestRow + 1, bestCol + 1
-    fieldWidth = 20
-    rowLabelSize = 5 + len(str(rows-1))
-    rowPrefix = ' '*rowLabelSize+' '
-    rowSeparator = rowPrefix + '|' + ('-'*(fieldWidth+3) + '|')* cols
-    print(rowPrefix, end='  ')
-    # Prints the column labels centered
-    for col in range(cols):
-        print(f'col={col}'.center(fieldWidth+2), end='  ')
-    print('\n' + rowSeparator)
-    for row in range(rows):
-        # Prints the row labels
-        print(f'row={row}'.center(rowLabelSize), end=' | ')
-        # Prints each item of the row flushed-right but the same width
-        for col in range(cols):
-            print(repr(a[(row, col)]).center(fieldWidth+1), end=' | ')
-        print('\n' + rowSeparator)
-    print()
-
-
-
-
-
-
-
-
-################################################################################
 #Board Generation
-
-
-
-    # # Create new Tile if current Tile is not a capital
-    # for i in range(size):
-    #     for j in range(size):
-    #         if isinstance(board[i][j], Capital):
-    #             continue
-    #         else:
-    #             newTile = tileSelector(i, j)
-    #             board[i][j] = newTile
-    # return board, capitals
 
 # main function that repeatedly tries to make a valid board
 # A valid board is a board where none of the capitals have overlapping 3x3 regions

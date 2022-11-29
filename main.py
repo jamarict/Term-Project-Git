@@ -6,10 +6,10 @@ from Screen import *
 def appStarted(app):
     #Image Info
     app.imageTitleScreen = app.loadImage("images/openBackground.jpeg")
-    titleScale = 1200/433 
+    titleScale = 1600/433 
     app.titleScreen = app.scaleImage(app.imageTitleScreen, titleScale)
     app.mode = "titleScreenMode"
-    app.margin = 200
+    app.margin = (app.width - app.height)/2
 
     #Positioning Info
     app.cx = app.width/2
@@ -70,6 +70,8 @@ def appStarted(app):
     app.mapSize = 0
     app.mapText = "No"
     app.suggestionText = ""
+    app.tile = None
+    app.buttonHub = []
 
 ################################################################################   
 
@@ -120,16 +122,41 @@ def setupMode_mousePressed(app, event):
         button.buttonPressed(app, event)
     app.buttonStartGame.buttonPressed(app, event)
 
+# In-Game Screen
 def inPlayScreenMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
-
+    for button in app.buttonHub:
+        button.redraw(app, canvas)
 
 def inPlayScreenMode_mousePressed(app, event):
+    if app.buttonHub != []:
+        for button in app.buttonHub:
+            if button.buttonPressed(app, event):
+                app.buttonHub = []
+                return
     (row, col) = checkClick(app, event.x, event.y)
-    print(app.game.getTile(row, col))
-    print(app.game.getUnit(row, col))
-    
+    app.tile = (app.game.getTile(row, col))
+    if app.tile == None:
+        app.buttonHub = []
+    else:
+        app.buttonHub = makeButtonHub(app)
 
-runApp(width =1100, height = 700)
+def inPlayScreenMode_keyPressed(app, event):
+    if event.key == "r":
+        x = Unit(0,0)
+        x.canAct = True
+        app.game.currentPlayer.currentUnits.append(x)
+        app.game.unitsOnBoard[(0,0)] = x
+        y = Village(0,0)
+        app.game.playerList[1].addCity(app.game, y)
+        app.game.map[(0,0)] = y
+    if event.key == "p":
+        print(app.game.currentPlayer.currency)
+        for city in app.game.currentPlayer.currentCities:
+            print(city, city.level)
+            print(city, city.popToNextLevel)
+            print(city, city.starsPerTurn)
+runApp(width = 1500, height = 700)
+    
