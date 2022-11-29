@@ -78,23 +78,24 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
                        fill = textColor)
 
 def drawInPlayScreen(app, canvas):
+    totalStarsPerTurn = 0
+    for city in app.game.currentPlayer.currentCities:
+        totalStarsPerTurn += city.starsPerTurn
     canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
     canvas.create_rectangle(app.width * 1/30, app.height * 1/10, app.width * 7/30, app.height * 9/10, fill = "sienna4")
     canvas.create_rectangle(app.width * 3/60, app.height * 3/20, app.width * 13/60, app.height * 17/20, fill = "bisque")
     canvas.create_text(app.width * 4/30, app.height * 5/40, text = "Game Info", font = "FixedSys 30 bold", fill = "floral white")
-    canvas.create_text(app.width * 4/30, app.height * 7/40, text = "Number of Players:", font = "FixedSys 15 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 10/40, text = f"{len(app.game.playerList)}", font = "FixedSys 30 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 14/40, text = "Current Player's Turn:", font = "FixedSys 15 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 17/40, text = f"{app.game.currentPlayer}", font = "FixedSys 30 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 21/40, text = f"{app.game.currentPlayer} City Count:", font = "FixedSys 15 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 24/40, text = f"{len(app.game.currentPlayer.currentCities)}", font = "FixedSys 30 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 28/40, text = f"{app.game.currentPlayer} Unit Count:", font = "FixedSys 15 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 31/40, text = f"{len(app.game.currentPlayer.currentUnits)}", font = "FixedSys 30 bold", fill = "black")
-    
-
-
-
-
+    canvas.create_text(app.width * 4/30, app.height * 7/40, text = "Current Player's Turn:", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 9/40, text = f"{app.game.currentPlayer}", font = "FixedSys 30 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 23/80, text = f"Curency:{app.game.currentPlayer.currency}", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 13/40, text = f"Stars Per Turn:{totalStarsPerTurn}", font = "FixedSys 15 bold", fill = "black")
+    if app.targetTile != None: 
+        canvas.create_text(app.width * 4/30, app.height * 16/40, text = f"{app.targetTile}", font = "FixedSys 20 bold", fill = "black")
+        infoText = f"""* City Level: {app.targetTile.level}\n\n* Resource Til\n  Level Up: {app.targetTile.popToNextLevel}
+            \n* Stars Per Turn: {app.targetTile.starsPerTurn}\n\n* Can Make Units: {app.targetTile.canMakeUnits}"""
+        canvas.create_text(app.width * 4/30, app.height * 22/40, text = infoText, font = "FixedSys 17", fill = "black")
+    else:
+        pass
 
 
 
@@ -168,15 +169,17 @@ def makeButtonHub(app):
         else:
             createUnitButton = CircleButton(app.width * 37/40, app.height * 8/20, buttonDims, "Create\n Unit", createUnit, "black")
             buttonList.append(createUnitButton)
-    if app.tile.resource != None and cityCheck(app)[0]:
+    if cityCheck(app)[0]:
         app.targetTile = cityCheck(app)[1]
-        harvestResourceButton = CircleButton(app.width * 16/20, app.height * 13/20, buttonDims, " Harvest\nResource", harvestResource, "black")
-        buttonList.append(harvestResourceButton)
-    if isinstance(app.tile, Field) and cityCheck(app)[0]:
-        app.targetTile = cityCheck(app)[1]
-        if app.tile.hasHouse == False:
-            createHouseButton = CircleButton(app.width * 37/40, app.height * 13/20, buttonDims, "Create\nHouse", createHouse, "black")
-            buttonList.append(createHouseButton)
+        if app.tile.resource != None:
+            harvestResourceButton = CircleButton(app.width * 16/20, app.height * 13/20, buttonDims, " Harvest\nResource", harvestResource, "black")
+            buttonList.append(harvestResourceButton)
+        if isinstance(app.tile, Field):
+            if app.tile.hasHouse == False:
+                createHouseButton = CircleButton(app.width * 37/40, app.height * 13/20, buttonDims, "Create\nHouse", createHouse, "black")
+                buttonList.append(createHouseButton)
+    else:
+        app.targetTile = None
     return buttonList
 
 
