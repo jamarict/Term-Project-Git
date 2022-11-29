@@ -1,6 +1,9 @@
 import random
 ################################################################################
 
+# All tile information from:
+# https://polytopia.fandom.com/wiki/Terrain 
+
 # Tiles make up the map of the game. No matter what kind of Tile, grid position
 # and unit status on tile should be stored
 class Tile(object):
@@ -15,6 +18,8 @@ class Tile(object):
     
     def redraw(self, app, canvas, x0, y0, x1, y1):
         canvas.create_rectangle(x0, y0, x1, y1, width = 3, fill = self.color)
+        if self.resource != None:
+            canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
 
 
 # Field Tiles contain specific resources & can have certain buildings built
@@ -25,7 +30,14 @@ class Field(Tile):
         self.color = "pale green"
         self.name = "Field"
         self.resource = self.spawnResources()
+        self.hasHouse = False
 
+    def redraw(self, app, canvas, x0, y0, x1, y1):
+        super().redraw(app, canvas, x0, y0, x1, y1)
+        if self.hasHouse == True:
+            canvas.create_rectangle(x0+20, y0+20,x1-20,y1-20, fill = "black")
+
+    # Self-contained functions to determin resource, different for each Tile
     def spawnResources(self):
         num = random.random()
         if (0 <= num < 0.28):
@@ -92,10 +104,6 @@ class City(Tile):
         self.starsPerTurn = 1
         self.name = "City"
         self.canMakeUnits = True
-
-
-    def __repr__(self):
-        return f"{self.name}"
 
 
 # Capitals are a special kind of city. Like the "home-base", each player starts with
