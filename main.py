@@ -19,6 +19,7 @@ def appStarted(app):
                    1/10, 9/10, 3/20, 9/40, 19/40, 11/15, 12/15, 13/15)
     app.bigButtonDimensions = 70
     app.numButtonDimensions = 40
+    app.endTurnDimensions = 50
     
     #Initial Buttons
     app.buttonPlayGame = CircleButton(app.width * app.xScalar[0], 
@@ -45,6 +46,7 @@ def appStarted(app):
                                       app.height * app.yScalar[0], 
                                       app.bigButtonDimensions, 
                                       " Start \n Game", startGame, "green4")
+    app.buttonEndTurn = CircleButton(app.width * 4/30, app.height * 23/30, app.endTurnDimensions, "End\nTurn", endTurn, "white")
     
     
     #Set List-Based Buttons
@@ -72,6 +74,7 @@ def appStarted(app):
     app.suggestionText = ""
     app.tile = None
     app.buttonHub = []
+    app.targetTile = None
 
 ################################################################################   
 
@@ -125,12 +128,16 @@ def setupMode_mousePressed(app, event):
 # In-Game Screen
 def inPlayScreenMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
+    app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
     for button in app.buttonHub:
         button.redraw(app, canvas)
 
 def inPlayScreenMode_mousePressed(app, event):
+    if app.buttonEndTurn.buttonPressed(app, event):
+        app.buttonHub = []
+        return
     if app.buttonHub != []:
         for button in app.buttonHub:
             if button.buttonPressed(app, event):
@@ -138,25 +145,16 @@ def inPlayScreenMode_mousePressed(app, event):
                 return
     (row, col) = checkClick(app, event.x, event.y)
     app.tile = (app.game.getTile(row, col))
+    if isinstance(app.tile, City):
+        if app.tile in app.game.currentPlayer.currentCities:
+            app.targetTile = app.tile
     if app.tile == None:
         app.buttonHub = []
     else:
         app.buttonHub = makeButtonHub(app)
 
 def inPlayScreenMode_keyPressed(app, event):
-    if event.key == "r":
-        x = Unit(0,0)
-        x.canAct = True
-        app.game.currentPlayer.currentUnits.append(x)
-        app.game.unitsOnBoard[(0,0)] = x
-        y = Village(0,0)
-        app.game.playerList[1].addCity(app.game, y)
-        app.game.map[(0,0)] = y
-    if event.key == "p":
-        print(app.game.currentPlayer.currency)
-        for city in app.game.currentPlayer.currentCities:
-            print(city, city.level)
-            print(city, city.popToNextLevel)
-            print(city, city.starsPerTurn)
+    pass
+
 runApp(width = 1500, height = 700)
     

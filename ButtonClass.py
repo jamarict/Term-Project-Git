@@ -147,6 +147,9 @@ def startGame(app): # Check Pre-Game Conditions
         app.game = multiplayer(app.playerNum, app.mapSize)
     app.mode = "inPlayScreenMode"
 
+def endTurn(app):
+    app.game.changeTurn(app)
+
 def moveUnit(app):
     print("working")
 

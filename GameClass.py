@@ -14,21 +14,32 @@ class GameObject(object):
         for i in range(len(self.playerList)):
             player = self.playerList[i]
             capital = capitals[i]
-            capital.color = player.color
-            player.currentCities.append(capital)
+            player.addCity(self, capital)
             player.addUnit(self, capital)
         for item in self.currentPlayer.currentUnits:
-            print(item)
             item.canAct = True
+        self.currentPlayer.firstTurn = False
         
     def __repr__(self):
         return f"{type(self)}"
     
-    def changeTurn(self): #changes player turns
+    def changeTurn(self, app): #changes player turns
+        app.targetTile = None
         self.currentPlayer.myTurn = False
+        for unit in self.currentPlayer.currentUnits:
+            unit.canAct = False
+        for city in self.currentPlayer.currentCities:
+            city.canMakeUnits = False
         self.currentPlayerNum = (self.currentPlayerNum + 1) % len(self.playerList)
         self.currentPlayer = self.playerList[self.currentPlayerNum]
         self.currentPlayer.myTurn = True
+        for unit in self.currentPlayer.currentUnits:
+            unit.canAct = True
+        for city in self.currentPlayer.currentCities:
+            city.canMakeUnits = True
+            if self.currentPlayer.firstTurn == False:
+                self.currentPlayer.currency += city.starsPerTurn
+        self.currentPlayer.firstTurn = False
 
     def getTile(self, x, y): # Gets tile at associated x,y coordinates
         if (x, y) not in self.map:
@@ -61,7 +72,8 @@ class Player(object): # Player objects that represent those playing
         self.currentCities = []
         self.currentUnits = []
         self.myTurn = False
-        self.currency = 100
+        self.currency = 5
+        self.firstTurn = True
 
     def addCity(self, game, city): # Adds city to map and player's cities
         if isinstance(city, City):
@@ -69,10 +81,12 @@ class Player(object): # Player objects that represent those playing
             for player in game.playerList:
                     if city in player.currentCities:
                         player.currentCities.remove(city)
+            city.name = city.name + f" {len(self.currentCities) + 1}"
             self.currentCities.append(city)
         else:
             newCity = City(city.x, city.y)
             newCity.color = self.color
+            newCity.name = newCity.name + f" {len(self.currentCities) + 1}"
             self.currentCities.append(newCity)
             game.map[(city.x, city.y)] = newCity
             
