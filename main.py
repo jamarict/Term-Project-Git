@@ -153,8 +153,17 @@ def inPlayScreenMode_mousePressed(app, event):
     else:
         app.buttonHub = makeButtonHub(app)
 
-def inPlayScreenMode_keyPressed(app, event):
-    pass
+# def unitMoveMode_redrawAll(app, canvas):
+#     drawInPlayScreen(app, canvas)
+#     app.buttonEndTurn.redraw(app, canvas)
+#     drawBoard(app, canvas)
+#     drawUnits(app, canvas)
+
+# def unitMoveMode_mousePressed(app, event):
+#     if app.buttonEndTurn.buttonPressed(app, event):
+#         app.buttonHub = []
+#     (row,col) = checkClick(app, event.x, event.y)
+    
 
 runApp(width = 1500, height = 700)
     

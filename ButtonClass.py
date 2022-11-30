@@ -148,10 +148,14 @@ def startGame(app): # Check Pre-Game Conditions
     app.mode = "inPlayScreenMode"
 
 def endTurn(app):
+    if app.mode != "inPlayScreenMode":
+        app.mode = "inPlayScreenMode"
     app.game.changeTurn(app)
 
 def moveUnit(app):
-    print("working")
+    # app.mode = "unitMoveMode"
+    # app.buttonHub = []
+    pass
 
 def attackUnit(app):
     print("something")
