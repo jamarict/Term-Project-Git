@@ -169,8 +169,9 @@ def makeButtonHub(app):
         else:
             createUnitButton = CircleButton(app.width * 37/40, app.height * 8/20, buttonDims, "Create\n Unit", createUnit, "black")
             buttonList.append(createUnitButton)
-    if cityCheck(app)[0]:
-        app.targetTile = cityCheck(app)[1]
+    value, tile = cityCheck(app)
+    if value == True:
+        app.targetTile = tile
         if app.tile.resource != None:
             harvestResourceButton = CircleButton(app.width * 16/20, app.height * 13/20, buttonDims, " Harvest\nResource", harvestResource, "black")
             buttonList.append(harvestResourceButton)
