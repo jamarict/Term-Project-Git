@@ -3,17 +3,20 @@ from UnitClass import *
 ################################################################################
 
 class GameObject(object):
-    def __init__(self, playerNum, mapSize):
+    def __init__(self, app, playerNum, mapSize):
         # Initializes board, players, first player turn, and adds all necessary units & capitals
         self.playerList = [Player(i) for i in range(playerNum)]
         self.currentPlayerNum = 0
         self.currentPlayer = self.playerList[self.currentPlayerNum]
         self.currentPlayer.myTurn = True
-        self.map, capitals = makeBoard(playerNum, mapSize)
+        self.map, capitals = makeBoard(app, playerNum, mapSize)
         self.unitsOnBoard = dict()
         for i in range(len(self.playerList)):
             player = self.playerList[i]
             capital = capitals[i]
+            capitalImage1 = app.loadImage("images/CapitalTile.png")
+            capitalImage2 = app.scaleImage(capitalImage1, 1/(app.mapSize*493/700))
+            capital.image = capitalImage2
             player.addCity(self, capital)
             player.addUnit(self, capital)
         for item in self.currentPlayer.currentUnits:
@@ -55,13 +58,13 @@ class GameObject(object):
 
 
 class vsCPU(GameObject):
-    def __init__(self, playerNum, mapSize):
+    def __init__(self, app, playerNum, mapSize):
         playerNum += 1
-        super().__init__(playerNum, mapSize)
+        super().__init__(app, playerNum, mapSize)
 
 class multiplayer(GameObject):
-    def __init__(self, playerNum, mapSize):
-        super().__init__(playerNum, mapSize)
+    def __init__(self, app, playerNum, mapSize):
+        super().__init__(app, playerNum, mapSize)
 
 class Player(object): # Player objects that represent those playing
     playerColors = ["red", "blue", "yellow", "white", "purple", "orange" ]

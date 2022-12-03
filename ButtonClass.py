@@ -142,9 +142,9 @@ def startGame(app): # Check Pre-Game Conditions
             app.suggestionText = "Select Players"
             return
     if app.playerNum == 1: # Make single-player game w/CPU
-        app.game = vsCPU(1, app.mapSize)
+        app.game = vsCPU(app, 1, app.mapSize)
     else: # Make local multiplayer game
-        app.game = multiplayer(app.playerNum, app.mapSize)
+        app.game = multiplayer(app, app.playerNum, app.mapSize)
     app.mode = "inPlayScreenMode"
 
 def endTurn(app):

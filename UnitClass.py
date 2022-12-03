@@ -16,5 +16,5 @@ class Unit(object):
 
     #units redraw themselves based on getCellBounds outputs
     def redraw (self, app, canvas, x0, y0, x1, y1):
-        r = 5
+        r = 10
         canvas.create_oval(x0 + r, y0 + r, x1 -r, y1 - r, fill = self.color, width = 5)
