@@ -8,8 +8,7 @@ from cmu_112_graphics import *
 # Tiles make up the map of the game. No matter what kind of Tile, grid position
 # and unit status on tile should be stored
 class Tile(object):
-    size = None
-    
+    image = None
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -20,7 +19,8 @@ class Tile(object):
     def __repr__(self):
         return f"{self.name}"
     
-    def redraw(self, app, canvas, x0, y0, x1, y1):
+    def redraw(self, app, canvas, x0, y0, x1, y1, sprite):
+        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(sprite))
         canvas.create_rectangle(x0, y0, x1, y1, width = 1, fill = None, outline = "black")
         if self.resource != None:
             canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
@@ -30,6 +30,7 @@ class Tile(object):
 # on them
 class Field(Tile):
     image = None
+    house = None
 
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -38,11 +39,8 @@ class Field(Tile):
         self.resource = self.spawnResources()
         self.hasHouse = False
 
-
-
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        super().redraw(app, canvas, x0, y0, x1, y1)
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         if self.hasHouse == True:
             canvas.create_rectangle(x0+20, y0+20,x1-20,y1-20, fill = "black")
 
@@ -71,8 +69,7 @@ class Mountain(Tile):
         self.resource = self.spawnResources()
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        super().redraw(app, canvas, x0, y0, x1, y1)
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
     def spawnResources(self):
         num = random.random()
@@ -93,8 +90,7 @@ class Forest(Tile):
         self.resource = self.spawnResources()
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        super().redraw(app, canvas, x0, y0, x1, y1)
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
 
     def spawnResources(self):    
@@ -115,8 +111,7 @@ class Village(Tile):
         self.name = "Village"
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        super().redraw(app, canvas, x0, y0, x1, y1)
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
 # Cities are owned by player. Cities have specific levels, give players stars,
 # and level up.
@@ -128,6 +123,10 @@ class City(Tile):
         self.starsPerTurn = 1
         self.name = "City"
         self.canMakeUnits = True
+
+    def redraw(self, app, canvas, x0, y0, x1, y1):
+        pass
+
 
 
 # Capitals are a special kind of city. Like the "home-base", each player starts with
