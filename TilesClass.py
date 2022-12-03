@@ -142,7 +142,7 @@ class Capital(City):
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
         canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        canvas.create_rectangle(x0, y0, x1, y1, width = 3, fill = None, outline = self.color)
+        canvas.create_rectangle(x0, y0, x1, y1, width = 4, fill = None, outline = self.color)
         if self.resource != None:
             canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
         
