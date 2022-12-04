@@ -153,18 +153,20 @@ def endTurn(app):
     app.game.changeTurn(app)
 
 def moveUnit(app):
-    # app.mode = "unitMoveMode"
-    # app.buttonHub = []
-    pass
+    app.mode = "unitMoveMode"
+    app.buttonHub = []
 
 def attackUnit(app):
-    print("something")
+    app.mode = "unitAttackMode"
+    app.buttonHub = []
 
 def createUnit(app):
-    print("somewhere")
+    app.mode = "createUnitsMode"
+    app.buttonHub = []
 
 def captureCity(app):
-    app.game.currentPlayer.addCity(app.game, app.tile)
+    app.game.currentPlayer.addCity(app, app.game, app.tile)
+    app.clickedUnit.outline = "black"
     app.clickedUnit.canAct = False
 
 def harvestResource(app):
@@ -191,3 +193,6 @@ def createHouse(app):
             app.targetTile.popToNextLevel = app.targetTile.level + 1 - extra
     else:
         print("not enough stars :/")
+
+def makeUnitsHub():
+    pass

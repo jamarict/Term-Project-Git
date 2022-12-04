@@ -7,8 +7,16 @@ class Unit(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.color = "red"
+        self.outline = "black"
         self.canAct = False
+        self.canMove = False
+        self.cost = 2
+        self.movement = 1
+        self.range = 1
+        self.attack = 2
+        self.defense = 2
+        self.health = 10
+        self.maxHealth = 10
 
     def __repr__(self):
         return f"Warrior({self.x, self.y}"
@@ -17,4 +25,4 @@ class Unit(object):
     #units redraw themselves based on getCellBounds outputs
     def redraw (self, app, canvas, x0, y0, x1, y1):
         r = 10
-        canvas.create_oval(x0 + r, y0 + r, x1 -r, y1 - r, fill = self.color, width = 5)
+        canvas.create_oval(x0 + r, y0 + r, x1 -r, y1 - r, fill = self.color, width = 3, outline = self.outline)

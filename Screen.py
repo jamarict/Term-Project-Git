@@ -149,14 +149,16 @@ def makeButtonHub(app):
     buttonList = []
     x = app.tile.x
     y = app.tile.y
+    #################################
     if (x,y) in app.game.unitsOnBoard and app.game.unitsOnBoard[(x, y)] in app.game.currentPlayer.currentUnits:
         app.clickedUnit = app.game.unitsOnBoard[(x, y)]
         if app.clickedUnit.canAct == False:
             pass
         else:
-            moveUnitButton = CircleButton(app.width * 16/20, app.height * 3/20, buttonDims, "Move\nUnit", moveUnit, "black")
+            if app.clickedUnit.canMove == True:
+                moveUnitButton = CircleButton(app.width * 16/20, app.height * 3/20, buttonDims, "Move\nUnit", moveUnit, "black")
+                buttonList.append(moveUnitButton)
             attackUnitButton = CircleButton(app.width * 37/40, app.height * 3/20, buttonDims, "Attack\n Unit", attackUnit, "black")
-            buttonList.append(moveUnitButton)
             buttonList.append(attackUnitButton)
             if isinstance(app.tile, Village) or ((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)):
                 captureCityButton = CircleButton(app.width * 16/20, app.height * 8/20, buttonDims, "Capture\n City", captureCity, "black")
@@ -199,4 +201,28 @@ def cityCheck(app):
                     return True, targetTile
     return False, None
 
-            
+def roundHalfUp(d):
+    # Round to nearest with ties going away from zero.
+    # You do not need to understand how this function works.
+    import decimal
+    rounding = decimal.ROUND_HALF_UP
+    return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
+
+def calculateDamage(app, attacker, defender):
+    attackForce = attacker.attack * (attacker.health/attacker.maxHealth)
+    defenseForce = defender.defense * (defender.health/defender.maxHealth)
+    totalDamage = attackForce + defenseForce
+    attackResult = roundHalfUp((attackForce / totalDamage) * attacker.attack * 4.5)
+    defenseResult = roundHalfUp((defenseForce / totalDamage) * defender.defense * 4.5)
+    defender.health -= attackResult
+    if defender.health <= 0:
+        del app.game.unitsOnBoard[(defender.x, defender.y)]
+        for player in app.game.playerList:
+            if defender in player.currentUnits:
+                player.currentUnits.remove(defender)
+    else:
+        attacker.health -= defenseResult
+        if attacker.health <= 0:
+            app.game.currentPlayer.currentUnits.remove(attacker)
+            del app.game.unitsOnBoard[(attacker.x, attacker.y)]
+    print(attacker.health, defender.health)
