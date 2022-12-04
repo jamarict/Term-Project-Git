@@ -153,9 +153,8 @@ def endTurn(app):
     app.game.changeTurn(app)
 
 def moveUnit(app):
-    # app.mode = "unitMoveMode"
-    # app.buttonHub = []
-    pass
+    app.mode = "unitMoveMode"
+    app.buttonHub = []
 
 def attackUnit(app):
     print("something")
@@ -164,7 +163,8 @@ def createUnit(app):
     print("somewhere")
 
 def captureCity(app):
-    app.game.currentPlayer.addCity(app.game, app.tile)
+    app.game.currentPlayer.addCity(app, app.game, app.tile)
+    app.clickedUnit.outline = "black"
     app.clickedUnit.canAct = False
 
 def harvestResource(app):

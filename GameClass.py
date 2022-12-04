@@ -17,10 +17,12 @@ class GameObject(object):
             capitalImage1 = app.loadImage("images/CapitalTile.png")
             capitalImage2 = app.scaleImage(capitalImage1, 1/(app.mapSize*493/700))
             capital.image = capitalImage2
-            player.addCity(self, capital)
+            player.addCity(app, self, capital)
             player.addUnit(self, capital)
         for item in self.currentPlayer.currentUnits:
             item.canAct = True
+            item.outline = "white"
+            item.canMove = True
         self.currentPlayer.firstTurn = False
         
     def __repr__(self):
@@ -31,6 +33,8 @@ class GameObject(object):
         self.currentPlayer.myTurn = False
         for unit in self.currentPlayer.currentUnits:
             unit.canAct = False
+            unit.outline = "black"
+            unit.canMove = False
         for city in self.currentPlayer.currentCities:
             city.canMakeUnits = False
         self.currentPlayerNum = (self.currentPlayerNum + 1) % len(self.playerList)
@@ -38,6 +42,8 @@ class GameObject(object):
         self.currentPlayer.myTurn = True
         for unit in self.currentPlayer.currentUnits:
             unit.canAct = True
+            unit.outline = "white"
+            unit.canMove = True
         for city in self.currentPlayer.currentCities:
             city.canMakeUnits = True
             if self.currentPlayer.firstTurn == False:
@@ -78,7 +84,7 @@ class Player(object): # Player objects that represent those playing
         self.currency = 5
         self.firstTurn = True
 
-    def addCity(self, game, city): # Adds city to map and player's cities
+    def addCity(self, app, game, city): # Adds city to map and player's cities
         if isinstance(city, City):
             city.color = self.color
             for player in game.playerList:
@@ -90,6 +96,10 @@ class Player(object): # Player objects that represent those playing
             newCity = City(city.x, city.y)
             newCity.color = self.color
             newCity.name = newCity.name + f" {len(self.currentCities) + 1}"
+            cityImage1 = app.loadImage("images/CityTile")
+            cityImage2 = app.scaleImage(cityImage1, 1/(app.mapSize*459/700))
+            newCity.image = cityImage2
+            
             self.currentCities.append(newCity)
             game.map[(city.x, city.y)] = newCity
             

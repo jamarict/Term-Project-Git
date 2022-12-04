@@ -154,9 +154,10 @@ def makeButtonHub(app):
         if app.clickedUnit.canAct == False:
             pass
         else:
-            moveUnitButton = CircleButton(app.width * 16/20, app.height * 3/20, buttonDims, "Move\nUnit", moveUnit, "black")
+            if app.clickedUnit.canMove == True:
+                moveUnitButton = CircleButton(app.width * 16/20, app.height * 3/20, buttonDims, "Move\nUnit", moveUnit, "black")
+                buttonList.append(moveUnitButton)
             attackUnitButton = CircleButton(app.width * 37/40, app.height * 3/20, buttonDims, "Attack\n Unit", attackUnit, "black")
-            buttonList.append(moveUnitButton)
             buttonList.append(attackUnitButton)
             if isinstance(app.tile, Village) or ((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)):
                 captureCityButton = CircleButton(app.width * 16/20, app.height * 8/20, buttonDims, "Capture\n City", captureCity, "black")
@@ -199,4 +200,3 @@ def cityCheck(app):
                     return True, targetTile
     return False, None
 
-            
