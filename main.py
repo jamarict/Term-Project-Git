@@ -151,7 +151,7 @@ def inPlayScreenMode_mousePressed(app, event):
     if app.tile == None:
         app.buttonHub = []
     else:
-        app.buttonHub = makeButtonHub(app)
+        app.buttonHub = makeButtonHub(app)   
 
 # def unitMoveMode_redrawAll(app, canvas):
 #     drawInPlayScreen(app, canvas)

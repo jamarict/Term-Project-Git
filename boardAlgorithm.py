@@ -57,7 +57,7 @@ def makeCapitalsHelper(app, playerNum, totalCities, possibleMoves, oldBoard, cur
                     #Create Empty Village Tile once all players have a capital
                     currentTile = Village(currentLocationX, currentLocationY)
                     currentTileImage1 = app.loadImage("images/VillageTile.png")
-                    currentTileImage2 = app.scaleImage(currentTileImage1, 1/(app.mapSize * 265/700))
+                    currentTileImage2 = app.scaleImage(currentTileImage1, 1/(app.mapSize * 368/700))
                     currentTile.image = currentTileImage2
                 #Update Board and Remove Move
                 oldBoard[(currentLocationX, currentLocationY)] = currentTile
@@ -101,8 +101,8 @@ def tileSelector(app, x, y):
         tile = Field(x,y)
         tileImage1 = app.loadImage("images/FieldTile.png")
         tileImage2 = app.scaleImage(tileImage1, 1/(app.mapSize*310/700) )
-        houseImage1 = app.loadImage("image/House.png")
-        houseImage2 = app.scaleImage(houseImage1, 1/(app.mapSize*2*310/700))
+        houseImage1 = app.loadImage("images/House.png")
+        houseImage2 = app.scaleImage(houseImage1, 1/(app.mapSize*2*265/700))
         tile.image = tileImage2
         tile.house = houseImage2
         return tile

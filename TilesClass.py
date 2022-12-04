@@ -42,7 +42,7 @@ class Field(Tile):
     def redraw(self, app, canvas, x0, y0, x1, y1):
         super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         if self.hasHouse == True:
-            canvas.create_rectangle(x0+20, y0+20,x1-20,y1-20, fill = "black")
+            canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.house))
 
     # Self-contained functions to determin resource, different for each Tile
     def spawnResources(self):
@@ -116,6 +116,7 @@ class Village(Tile):
 # Cities are owned by player. Cities have specific levels, give players stars,
 # and level up.
 class City(Tile):
+    image = None
     def __init__(self, x, y):
         super().__init__(x, y)
         self.level = 1
@@ -124,8 +125,9 @@ class City(Tile):
         self.name = "City"
         self.canMakeUnits = True
 
-    def redraw(self, app, canvas, x0, y0, x1, y1):
-        pass
+    def redraw(self, app, canvas, x0, y0, x1, y1, sprite):
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
+        canvas.create_rectangle(x0, y0,x1, y1, width = 4, fill = None, outline = self.color)
 
 
 
@@ -140,9 +142,6 @@ class Capital(City):
         self.color = "yellow"
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.image))
-        canvas.create_rectangle(x0, y0, x1, y1, width = 4, fill = None, outline = self.color)
-        if self.resource != None:
-            canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
+        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
 
