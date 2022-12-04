@@ -10,7 +10,13 @@ class Unit(object):
         self.outline = "black"
         self.canAct = False
         self.canMove = False
+        self.cost = 2
         self.movement = 1
+        self.range = 1
+        self.attack = 2
+        self.defense = 2
+        self.health = 10
+        self.maxHealth = 10
 
     def __repr__(self):
         return f"Warrior({self.x, self.y}"

@@ -125,7 +125,7 @@ class City(Tile):
         self.name = "City"
         self.canMakeUnits = True
 
-    def redraw(self, app, canvas, x0, y0, x1, y1, sprite):
+    def redraw(self, app, canvas, x0, y0, x1, y1):
         super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         canvas.create_rectangle(x0, y0,x1, y1, width = 4, fill = None, outline = self.color)
 
@@ -141,7 +141,4 @@ class Capital(City):
         self.name = "Capital"
         self.color = "yellow"
 
-    def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
-        
 

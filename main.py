@@ -175,18 +175,39 @@ def unitMoveMode_mousePressed(app, event):
         app.mode = "inPlayScreenMode"
     else:
         app.mode = "inPlayScreenMode"
-    
-        
 
+def unitAttackMode_redrawAll(app, canvas):
+    drawInPlayScreen(app, canvas)
+    app.buttonEndTurn.redraw(app, canvas)
+    drawBoard(app, canvas)
+    drawUnits(app, canvas)
 
-
-
-def unitMoveMode_keyPressed(app, event):
-    if event.key == "r":
-        print(app.clickedUnit)
+def unitAttackMode_mousePressed(app, event):
+    (row, col) = checkClick(app, event.x, event.y)
+    if (row, col) in app.game.unitsOnBoard and app.game.unitsOnBoard[(row, col)] not in app.game.currentPlayer.currentUnits:
+        if (abs(app.clickedUnit.x - row) <= app.clickedUnit.range and
+            abs(app.clickedUnit.y - col) <= app.clickedUnit.range):
+            calculateDamage(app, app.clickedUnit, app.game.unitsOnBoard[(row, col)])
+            app.mode = "inPlayScreenMode"
+        else:
+            print("Not in range")
+            app.mode = "inPlayScreenMode"
+    else:
+        print("Invalid Attack")
         app.mode = "inPlayScreenMode"
 
+def createUnitsMode_redrawAll(app, canvas):
+    drawInPlayScreen(app, canvas)
+    app.buttonEndTurn.redraw(app, canvas)
+    drawBoard(app, canvas)
+    drawUnits(app, canvas)
+    canvas.create_text(app.cx, app.cy, text = "creatUnits")
 
+def createUnitsMode_keyPressed(app, event):
+    if event.key == "r":
+        app.buttonHub = []
+        app.mode = "inPlayScreenMode"
+        
     
 
 runApp(width = 1500, height = 700)

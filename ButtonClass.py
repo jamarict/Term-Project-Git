@@ -157,10 +157,12 @@ def moveUnit(app):
     app.buttonHub = []
 
 def attackUnit(app):
-    print("something")
+    app.mode = "unitAttackMode"
+    app.buttonHub = []
 
 def createUnit(app):
-    print("somewhere")
+    app.mode = "createUnitsMode"
+    app.buttonHub = []
 
 def captureCity(app):
     app.game.currentPlayer.addCity(app, app.game, app.tile)
@@ -191,3 +193,6 @@ def createHouse(app):
             app.targetTile.popToNextLevel = app.targetTile.level + 1 - extra
     else:
         print("not enough stars :/")
+
+def makeUnitsHub():
+    pass

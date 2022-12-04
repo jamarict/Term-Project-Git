@@ -96,10 +96,9 @@ class Player(object): # Player objects that represent those playing
             newCity = City(city.x, city.y)
             newCity.color = self.color
             newCity.name = newCity.name + f" {len(self.currentCities) + 1}"
-            cityImage1 = app.loadImage("images/CityTile")
+            cityImage1 = app.loadImage("images/CityTile.png")
             cityImage2 = app.scaleImage(cityImage1, 1/(app.mapSize*459/700))
             newCity.image = cityImage2
-            
             self.currentCities.append(newCity)
             game.map[(city.x, city.y)] = newCity
             
