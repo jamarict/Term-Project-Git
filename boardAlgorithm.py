@@ -5,7 +5,7 @@ import random
 
 # main function that repeatedly tries to make a valid board
 # A valid board is a board where none of the capitals have overlapping 3x3 regions
-def makeBoard(playerNum, mapSize):
+def makeBoard(app, playerNum, mapSize):
     newBoard = None
     while newBoard == None:
         oldBoard = dict() #Store Map as a dictionary with coordinate keys
@@ -23,7 +23,7 @@ def makeBoard(playerNum, mapSize):
         elif mapSize == 19:
             totalCities = 13
         # Backtracking Helper that adds capitals to board. Returns board and capital locations
-        newBoard = makeCapitalsHelper(playerNum, totalCities, possibleMoves, 
+        newBoard = makeCapitalsHelper(app, playerNum, totalCities, possibleMoves, 
                                       oldBoard, currentCities)
     board = newBoard[0]
     capitals = newBoard[1]
@@ -33,12 +33,12 @@ def makeBoard(playerNum, mapSize):
             if key in board:
                 continue
             else:
-                newTile = tileSelector(row, col)
+                newTile = tileSelector(app, row, col)
                 board[key] = newTile
     return board, capitals
 
 # recursive function that puts capitals and villages in random positions
-def makeCapitalsHelper(playerNum, totalCities, possibleMoves, oldBoard, currentCities):
+def makeCapitalsHelper(app, playerNum, totalCities, possibleMoves, oldBoard, currentCities):
     # Base case when there's no more cities
     if totalCities == 0:
         return oldBoard, currentCities
@@ -52,15 +52,19 @@ def makeCapitalsHelper(playerNum, totalCities, possibleMoves, oldBoard, currentC
                 if playerNum > 0:
                     #Create Capital Tile for unaccounted Players
                     currentTile = Capital(currentLocationX, currentLocationY)
+                    
                 else:
                     #Create Empty Village Tile once all players have a capital
                     currentTile = Village(currentLocationX, currentLocationY)
+                    currentTileImage1 = app.loadImage("images/VillageTile.png")
+                    currentTileImage2 = app.scaleImage(currentTileImage1, 1/(app.mapSize * 368/700))
+                    currentTile.image = currentTileImage2
                 #Update Board and Remove Move
                 oldBoard[(currentLocationX, currentLocationY)] = currentTile
                 possibleMoves.remove(currentLocation)
                 currentCities.append(currentTile)
                 # Recursion
-                result = makeCapitalsHelper(playerNum - 1, totalCities - 1, 
+                result = makeCapitalsHelper(app, playerNum - 1, totalCities - 1, 
                                             possibleMoves, oldBoard, currentCities)
                 if result != None:
                     return result
@@ -79,12 +83,27 @@ def isLegalMove(cx, cy, currentCities):
 # Random number generation to determine Tile Type
 # Website to determine bounds:
 # https://polytopia.fandom.com/wiki/Map_Generation
-def tileSelector(x, y):
+def tileSelector(app, x, y):
     tile = random.random()
     if (0 <= tile < .20):
-        return Mountain(x, y)
+        tile = Mountain(x,y)
+        tileImage1 = app.loadImage("images/MountainTile.png")
+        tileImage2 = app.scaleImage(tileImage1, 1/(app.mapSize * 470/700))
+        tile.image = tileImage2
+        return tile
     elif (.20 <= tile < .54):
-        return Forest(x, y)
+        tile = Forest(x,y)
+        tileImage1 = app.loadImage("images/ForestTile.png")
+        tileImage2 = app.scaleImage(tileImage1, 1/(app.mapSize*467/700))
+        tile.image = tileImage2
+        return tile
     else:
-        return Field(x, y)
+        tile = Field(x,y)
+        tileImage1 = app.loadImage("images/FieldTile.png")
+        tileImage2 = app.scaleImage(tileImage1, 1/(app.mapSize*310/700) )
+        houseImage1 = app.loadImage("images/House.png")
+        houseImage2 = app.scaleImage(houseImage1, 1/(app.mapSize*2*265/700))
+        tile.image = tileImage2
+        tile.house = houseImage2
+        return tile
     
