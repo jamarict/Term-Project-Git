@@ -162,12 +162,15 @@ def attackUnit(app):
 
 def createUnit(app):
     app.mode = "createUnitsMode"
-    app.buttonHub = []
+    app.buttonHub = makeUnitsHub(app)
+
 
 def captureCity(app):
     app.game.currentPlayer.addCity(app, app.game, app.tile)
     app.clickedUnit.outline = "black"
     app.clickedUnit.canAct = False
+    app.clickedUnit.canMove = False
+    app.buttonHub = []
 
 def harvestResource(app):
     if app.game.currentPlayer.currency >= 1:
@@ -179,7 +182,9 @@ def harvestResource(app):
             app.targetTile.starsPerTurn += 1
             app.targetTile.popToNextLevel = app.targetTile.level + 1
     else:
-        print("not enough stars :/")
+        app.tip = "Not Enough Stars"
+        app.displayTip = True
+    app.buttonHub = []
 
 def createHouse(app):
     if app.game.currentPlayer.currency >= 2 and app.tile.hasHouse == False:
@@ -192,7 +197,82 @@ def createHouse(app):
             app.targetTile.starsPerTurn += 1
             app.targetTile.popToNextLevel = app.targetTile.level + 1 - extra
     else:
-        print("not enough stars :/")
+        app.tip = "Not Enough Stars"
+        app.displayTip = True
+    app.buttonHub = []
 
-def makeUnitsHub():
-    pass
+
+def makeUnitsHub(app):
+    buttonList = []
+    warrior = Unit(-1,-1)
+    createWarriorButton = RectangleButton(app.width*64/80, app.height*5/20, 90, 150 , f"""Create\nWarrior\n\nCost:{warrior.cost}⭐
+Health:{warrior.health}\nMovement:{warrior.movement}\nRange:{warrior.range}\nAttack:{warrior.attack}\nDefense:{warrior.defense}""", createWarrior, "black")
+    buttonList.append(createWarriorButton)
+    archer = Archer(-1, -1)
+    createArcherButton = RectangleButton(app.width*74/80, app.height*5/20, 90, 150 , f"""Create\nArcher\n\nCost:{archer.cost}⭐
+Health:{archer.health}\nMovement:{archer.movement}\nRange:{archer.range}\nAttack:{archer.attack}\nDefense:{archer.defense}""", createArcher, "black")
+    buttonList.append(createArcherButton)
+    rider = Rider(-1,-1)
+    createRiderButton = RectangleButton(app.width*64/80, app.height*15/20, 90, 150 , f"""Create\nRider\n\nCost:{rider.cost}⭐
+Health:{rider.health}\nMovement:{rider.movement}\nRange:{rider.range}\nAttack:{rider.attack}\nDefense:{rider.defense}""", createRider, "black")
+    buttonList.append(createRiderButton)
+    defender = Defender(-1,-1)
+    createDefenderButton = RectangleButton(app.width*74/80, app.height*15/20, 90, 150 , f"""Create\nDefender\n\nCost:{defender.cost}⭐
+Health:{defender.health}\nMovement:{defender.movement}\nRange:{defender.range}\nAttack:{defender.attack}\nDefense:{defender.defense}""", createDefender, "black")
+    buttonList.append(createDefenderButton)
+    return buttonList
+    
+
+def createWarrior(app):
+    if app.game.currentPlayer.currency >= Unit(-1,-1).cost:
+        app.game.currentPlayer.currency -= Unit(-1,-1).cost
+        city = app.tile
+        newWarrior = Unit(city.x, city.y)
+        newWarrior.color = city.color
+        app.game.currentPlayer.currentUnits.append(newWarrior)
+        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        city.canMakeUnits = False
+    else:
+        app.tip = "Not Enough Stars"
+        app.displayTip = True
+
+def createArcher(app):
+    if app.game.currentPlayer.currency >= Archer(-1,-1).cost:
+        app.game.currentPlayer.currency -= Archer(-1,-1).cost
+        city = app.tile
+        newWarrior = Archer(city.x, city.y)
+        newWarrior.color = city.color
+        app.game.currentPlayer.currentUnits.append(newWarrior)
+        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        city.canMakeUnits = False
+    else:
+        app.tip = "Not Enough Stars"
+        app.displayTip = True
+
+    
+def createRider(app):
+    if app.game.currentPlayer.currency >= Rider(-1,-1).cost:
+        app.game.currentPlayer.currency -= Rider(-1,-1).cost
+        city = app.tile
+        newWarrior = Rider(city.x, city.y)
+        newWarrior.color = city.color
+        app.game.currentPlayer.currentUnits.append(newWarrior)
+        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        city.canMakeUnits = False
+    else:
+        app.tip = "Not Enough Stars"
+        app.displayTip = True
+
+
+def createDefender(app):
+    if app.game.currentPlayer.currency >= Defender(-1,-1).cost:
+        app.game.currentPlayer.currency -= Defender(-1,-1).cost
+        city = app.tile
+        newWarrior = Defender(city.x, city.y)
+        newWarrior.color = city.color
+        app.game.currentPlayer.currentUnits.append(newWarrior)
+        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        city.canMakeUnits = False
+    else:
+        app.tip = "Not Enough Stars"
+        app.displayTip = True

@@ -59,6 +59,16 @@ def drawSettingsScreen(app, canvas):
     canvas.create_text(app.cx,app.cy, text = "Features Coming Soon!", 
                        font = "FixedSys 40 bold", fill = textColor)
 
+def drawGameOver(app, canvas):
+    canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.gameOverImage))
+    canvas.create_rectangle(app.width*1/4, app.height*1/4, app.width*3/4, app.height*3/4, fill = "sienna4")
+    canvas.create_rectangle(app.width*9/32, app.height*9/32, app.width*23/32, app.height*23/32, fill = "bisque3")
+    canvas.create_text(app.cx, app.height*11/32, text = "Congratulations", fill = "gold", font = "FixedSys 60 bold")
+    canvas.create_text(app.cx, app.height*16/32, text = f"   {app.game.currentPlayer} Is\nThe Glorious Victor", fill = f"{app.game.currentPlayer.color}", font = "FixedSys 40 bold")
+    canvas.create_text(app.cx, app.height*21/32, text = f"Reign With Wisdom", fill = f"{app.game.currentPlayer.color}", font = "FixedSys 40 bold italic")
+
+    
+
 def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-game conditions
     textColor = "red4"
     canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
@@ -86,16 +96,22 @@ def drawInPlayScreen(app, canvas):
     canvas.create_rectangle(app.width * 3/60, app.height * 3/20, app.width * 13/60, app.height * 17/20, fill = "bisque")
     canvas.create_text(app.width * 4/30, app.height * 5/40, text = "Game Info", font = "FixedSys 30 bold", fill = "floral white")
     canvas.create_text(app.width * 4/30, app.height * 7/40, text = "Current Player's Turn:", font = "FixedSys 15 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 9/40, text = f"{app.game.currentPlayer}", font = "FixedSys 30 bold", fill = "black")
-    canvas.create_text(app.width * 4/30, app.height * 23/80, text = f"Curency:{app.game.currentPlayer.currency}", font = "FixedSys 15 bold", fill = "black")
+    canvas.create_text(app.width * 4/30, app.height * 9/40, text = f"{app.game.currentPlayer}", font = "FixedSys 20 bold", fill = app.game.currentPlayer.color)
+    canvas.create_text(app.width * 4/30, app.height * 45/160, text = f"Currency:{app.game.currentPlayer.currency}⭐", font = "FixedSys 15 bold", fill = "gold2")
     canvas.create_text(app.width * 4/30, app.height * 13/40, text = f"Stars Per Turn:{totalStarsPerTurn}", font = "FixedSys 15 bold", fill = "black")
-    if app.targetTile != None: 
+    if app.unit == app.targetTile == None:
+        pass
+    elif app.unit == None and app.targetTile != None: 
         canvas.create_text(app.width * 4/30, app.height * 16/40, text = f"{app.targetTile}", font = "FixedSys 20 bold", fill = "black")
         infoText = f"""* City Level: {app.targetTile.level}\n\n* Resource Til\n  Level Up: {app.targetTile.popToNextLevel}
             \n* Stars Per Turn: {app.targetTile.starsPerTurn}\n\n* Can Make Units: {app.targetTile.canMakeUnits}"""
         canvas.create_text(app.width * 4/30, app.height * 22/40, text = infoText, font = "FixedSys 17", fill = "black")
     else:
-        pass
+        unitText = f"""*Position: {app.unit.x, app.unit.y}\n*Health: {app.unit.health}\n*Movement: {app.unit.movement}\n*Range: {app.unit.range}
+*Attack: {app.unit.attack}\n*Defense: {app.unit.defense}\n*Can Move: {app.unit.canMove}\n*Can Act: {app.unit.canAct}"""
+        canvas.create_text(app.width * 4/30, app.height * 16/40, text = f"{app.unit.color} {app.unit.title}", font = "FixedSys 20 bold", fill = app.unit.color)
+        canvas.create_text(app.width * 4/30, app.height * 22/40, text = unitText, font = "FixedSys 17", fill = "black")
+
 
 
 
@@ -145,11 +161,10 @@ def pointInGrid(app, x, y): # Returns true of mouse click is inside board, from 
     return (app.margin <= x <= app.width - app.margin) and (0 <= y <= app.height)
 
 def makeButtonHub(app):
-    buttonDims = 70
+    buttonDims = 80
     buttonList = []
     x = app.tile.x
     y = app.tile.y
-    #################################
     if (x,y) in app.game.unitsOnBoard and app.game.unitsOnBoard[(x, y)] in app.game.currentPlayer.currentUnits:
         app.clickedUnit = app.game.unitsOnBoard[(x, y)]
         if app.clickedUnit.canAct == False:
@@ -161,7 +176,7 @@ def makeButtonHub(app):
             attackUnitButton = CircleButton(app.width * 37/40, app.height * 3/20, buttonDims, "Attack\n Unit", attackUnit, "black")
             buttonList.append(attackUnitButton)
             if isinstance(app.tile, Village) or ((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)):
-                captureCityButton = CircleButton(app.width * 16/20, app.height * 8/20, buttonDims, "Capture\n City", captureCity, "black")
+                captureCityButton = CircleButton(app.width * 16/20, app.height * 10/20, buttonDims, "Capture\n City", captureCity, "black")
                 buttonList.append(captureCityButton)
     if isinstance(app.tile, City):
         if (x,y) in app.game.unitsOnBoard:
@@ -169,17 +184,17 @@ def makeButtonHub(app):
         elif app.tile not in app.game.currentPlayer.currentCities:
             pass
         else:
-            createUnitButton = CircleButton(app.width * 37/40, app.height * 8/20, buttonDims, "Create\n Unit", createUnit, "black")
+            createUnitButton = CircleButton(app.width * 37/40, app.height * 10/20, buttonDims, "Create\n Unit", createUnit, "black")
             buttonList.append(createUnitButton)
     value, tile = cityCheck(app)
     if value == True:
         app.targetTile = tile
         if app.tile.resource != None:
-            harvestResourceButton = CircleButton(app.width * 16/20, app.height * 13/20, buttonDims, " Harvest\nResource", harvestResource, "black")
+            harvestResourceButton = CircleButton(app.width * 16/20, app.height * 17/20, buttonDims, "Harvest\nResource\n  1⭐", harvestResource, "black")
             buttonList.append(harvestResourceButton)
         if isinstance(app.tile, Field):
             if app.tile.hasHouse == False:
-                createHouseButton = CircleButton(app.width * 37/40, app.height * 13/20, buttonDims, "Create\nHouse", createHouse, "black")
+                createHouseButton = CircleButton(app.width * 37/40, app.height * 17/20, buttonDims, "Create\nHouse\n 2⭐", createHouse, "black")
                 buttonList.append(createHouseButton)
     else:
         app.targetTile = None
@@ -215,14 +230,23 @@ def calculateDamage(app, attacker, defender):
     attackResult = roundHalfUp((attackForce / totalDamage) * attacker.attack * 4.5)
     defenseResult = roundHalfUp((defenseForce / totalDamage) * defender.defense * 4.5)
     defender.health -= attackResult
+    attacker.canAct = False
+    attacker.canMove = False
+    attacker.outline = "black"
     if defender.health <= 0:
         del app.game.unitsOnBoard[(defender.x, defender.y)]
         for player in app.game.playerList:
             if defender in player.currentUnits:
                 player.currentUnits.remove(defender)
     else:
+        if attacker.range > defender.range:
+            return
         attacker.health -= defenseResult
         if attacker.health <= 0:
             app.game.currentPlayer.currentUnits.remove(attacker)
             del app.game.unitsOnBoard[(attacker.x, attacker.y)]
-    print(attacker.health, defender.health)
+    
+def displayTip(app, canvas):
+    if app.displayTip:
+        canvas.create_rectangle(app.width * 6/20, app.height * 9/20, app.width * 14/20, app.height * 11/20, fill = "sienna4")
+        canvas.create_text(app.cx, app.cy, text = f"{app.tip}", font = "FixedSys 40 bold", fill = "gold")

@@ -73,7 +73,7 @@ class multiplayer(GameObject):
         super().__init__(app, playerNum, mapSize)
 
 class Player(object): # Player objects that represent those playing
-    playerColors = ["red", "blue", "yellow", "white", "purple", "orange" ]
+    playerColors = ["Red", "Blue", "Yellow", "Green", "Purple", "Orange" ]
     def __init__(self, name):
         self.name = f"Player {name}"
         self.color = self.playerColors[name]
@@ -103,7 +103,7 @@ class Player(object): # Player objects that represent those playing
             game.map[(city.x, city.y)] = newCity
             
     def __repr__(self):
-        return self.name
+        return f'Player {self.color}'
     
     def addUnit(self, game, city): #Add's unit to unit dictionary
         newUnit = Unit(city.x, city.y)

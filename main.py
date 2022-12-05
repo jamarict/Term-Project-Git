@@ -1,6 +1,7 @@
 from cmu_112_graphics import *
 from ButtonClass import *
 from Screen import *
+import time
 ################################################################################
 
 def appStarted(app):
@@ -8,6 +9,9 @@ def appStarted(app):
     app.imageTitleScreen = app.loadImage("images/openBackground.jpeg")
     titleScale = 1600/433 
     app.titleScreen = app.scaleImage(app.imageTitleScreen, titleScale)
+    app.imageOver = app.loadImage("images/FinalImage.jpg")
+    scale = 7/8
+    app.gameOverImage = app.scaleImage(app.imageOver, scale)
     app.mode = "titleScreenMode"
     app.margin = (app.width - app.height)/2
 
@@ -47,7 +51,9 @@ def appStarted(app):
                                       app.bigButtonDimensions, 
                                       " Start \n Game", startGame, "green4")
     app.buttonEndTurn = CircleButton(app.width * 4/30, app.height * 23/30, app.endTurnDimensions, "End\nTurn", endTurn, "white")
-    
+    app.gameOverButton = RectangleButton(app.cx, app.height*7/8, 125, 50, "Back to Title", goToTitle, "White")
+
+
     
     #Set List-Based Buttons
     app.setupButtons = []
@@ -75,6 +81,9 @@ def appStarted(app):
     app.tile = None
     app.buttonHub = []
     app.targetTile = None
+    app.unit = None
+    app.displayTip = False
+
 
 ################################################################################   
 
@@ -116,7 +125,7 @@ def setupMode_redrawAll(app, canvas):
     drawSetupScreen(app, canvas)
     app.buttonTitle.redraw(app, canvas)
     for button in app.setupButtons:
-        button.redraw(app, canvas)
+        button.redraw(app, canvas) 
     app.buttonStartGame.redraw(app, canvas)
   
 def setupMode_mousePressed(app, event):
@@ -133,6 +142,7 @@ def inPlayScreenMode_redrawAll(app, canvas):
     drawUnits(app, canvas)
     for button in app.buttonHub:
         button.redraw(app, canvas)
+    displayTip(app, canvas)
 
 def inPlayScreenMode_mousePressed(app, event):
     if app.buttonEndTurn.buttonPressed(app, event):
@@ -141,10 +151,13 @@ def inPlayScreenMode_mousePressed(app, event):
     if app.buttonHub != []:
         for button in app.buttonHub:
             if button.buttonPressed(app, event):
-                app.buttonHub = []
                 return
     (row, col) = checkClick(app, event.x, event.y)
     app.tile = (app.game.getTile(row, col))
+    if (row, col) in app.game.unitsOnBoard:
+        app.unit = app.game.unitsOnBoard[(row, col)]
+    else:
+        app.unit = None
     if isinstance(app.tile, City):
         if app.tile in app.game.currentPlayer.currentCities:
             app.targetTile = app.tile
@@ -153,17 +166,38 @@ def inPlayScreenMode_mousePressed(app, event):
     else:
         app.buttonHub = makeButtonHub(app)   
 
+def inPlayScreenMode_timerFired(app):
+    for player in app.game.playerList:
+        if player.currentCities == []:
+            app.game.playerList.remove(player)
+    if len(app.game.playerList) == 1:
+        app.mode = "GameOverMode"
+    if app.displayTip == True:
+        time.sleep(1.5)
+        app.displayTip = False
+
+def inPlayScreenMode_keyPressed(app, event):
+    if event.key == "r":
+        app.mode = "GameOverMode"
+
 def unitMoveMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
 
+
 def unitMoveMode_mousePressed(app, event):
     (row, col) = checkClick(app, event.x, event.y)
     app.tile = (app.game.getTile(row, col))
     if row == app.clickedUnit.x and col == app.clickedUnit.y:
         app.mode = "inPlayScreenMode"
+        app.tip = "Invalid Move"
+        app.displayTip = True
+    elif (row,col) in app.game.unitsOnBoard:
+        app.mode = "inPlayScreenMode"
+        app.tip = "Space Occupied"
+        app.displayTip = True
     elif (abs(app.clickedUnit.x - row) <= app.clickedUnit.movement and 
         abs(app.clickedUnit.y - col) <= app.clickedUnit.movement):
         del app.game.unitsOnBoard[(app.clickedUnit.x, app.clickedUnit.y)]
@@ -175,6 +209,8 @@ def unitMoveMode_mousePressed(app, event):
         app.mode = "inPlayScreenMode"
     else:
         app.mode = "inPlayScreenMode"
+        app.tip = "Invalid Move"
+        app.displayTip = True
 
 def unitAttackMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
@@ -190,10 +226,12 @@ def unitAttackMode_mousePressed(app, event):
             calculateDamage(app, app.clickedUnit, app.game.unitsOnBoard[(row, col)])
             app.mode = "inPlayScreenMode"
         else:
-            print("Not in range")
+            app.tip = "Not In Range"
+            app.displayTip = True
             app.mode = "inPlayScreenMode"
     else:
-        print("Invalid Attack")
+        app.tip = "Invalid Attack"
+        app.displayTip = True
         app.mode = "inPlayScreenMode"
 
 def createUnitsMode_redrawAll(app, canvas):
@@ -201,14 +239,25 @@ def createUnitsMode_redrawAll(app, canvas):
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
-    canvas.create_text(app.cx, app.cy, text = "creatUnits")
+    for button in app.buttonHub:
+        button.redraw(app, canvas)
 
-def createUnitsMode_keyPressed(app, event):
-    if event.key == "r":
-        app.buttonHub = []
-        app.mode = "inPlayScreenMode"
-        
+def createUnitsMode_mousePressed(app, event):
+    for button in app.buttonHub:
+        button.buttonPressed(app, event)
+    app.buttonHub = []
+    app.mode = "inPlayScreenMode"
+
+def GameOverMode_redrawAll(app, canvas):
+    drawGameOver(app, canvas)
+    if app.gameOverButton.redraw(app, canvas):
+        appStarted(app)
+
+def GameOverMode_mousePressed(app, event):
+    app.gameOverButton.buttonPressed(app, event)
     
+
+
 
 runApp(width = 1500, height = 700)
     
