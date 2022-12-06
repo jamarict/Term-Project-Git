@@ -203,7 +203,7 @@ def createHouse(app):
     app.buttonHub = []
 
 ################################################################################
-###
+
 def makeInitialButtons(app):
     bigDimensions = 70
     endDimensions = 50
@@ -253,8 +253,6 @@ def makeInitialButtons(app):
     sizeHeight = 1/28
     makeSizeButtons(app, buttonRows, sizeWidth, sizeHeight)
 
-
-
 def makeNumberButtons(app, dim, rows, cols):
     rowRef = app.width * 1/4
     colRef1 = app.height * 2/15
@@ -275,6 +273,79 @@ def makeSizeButtons(app, rows, width, height):
                          app.height * height, f"{row}", setMapSize, row, "red4")
         app.setupButtons.append(button)
 
+
+################################################################################
+
+def makeButtonHub(app):
+    buttonDims = 80
+    buttonList = []
+    x = app.tile.x
+    y = app.tile.y
+    unit = app.game.getUnit(x, y)
+
+    posX1 = app.width * 16/20
+    posY1 = app.height * 3/20
+    posX2 = app.width * 37/40
+    posY2 = app.height * 10/20
+    posY3 = app.height * 17/20
+
+    if unit != None and unit in app.game.currentPlayer.currentUnits:
+        app.clickedUnit = unit
+        if unit.canAct == False:
+            pass
+        else:
+            if unit.canMove == True:
+                moveUnitButton = CircleButton(posX1, posY1, buttonDims, 
+                                                "Move\nUnit", moveUnit, "black")
+                buttonList.append(moveUnitButton)
+            attackUnitButton = CircleButton(posX2, posY1, buttonDims, 
+                                           "Attack\n Unit", attackUnit, "black")
+            buttonList.append(attackUnitButton)
+            if (((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)) 
+                or isinstance(app.tile, Village)):
+                captureCityButton = CircleButton(posX1, posY2, buttonDims, 
+                                         "Capture\n City", captureCity, "black")
+                buttonList.append(captureCityButton)
+    if isinstance(app.tile, City):
+        if (x,y) in app.game.unitsOnBoard:
+            pass
+        elif app.tile not in app.game.currentPlayer.currentCities:
+            pass
+        else:
+            createUnitButton = CircleButton(posX2, posY2, buttonDims, 
+                                           "Create\n Unit", createUnit, "black")
+            buttonList.append(createUnitButton)
+    value, tile = cityCheck(app)
+    if value == True:
+        app.targetTile = tile
+        if tile.resource != None:
+            harvestResourceButton = CircleButton(posX1, posY3, buttonDims, 
+                          "Harvest\nResource\n  1⭐", harvestResource, "black")
+            buttonList.append(harvestResourceButton)
+        if isinstance(app.tile, Field):
+            if app.tile.hasHouse == False:
+                createHouseButton = CircleButton(posX2, posY3, buttonDims, 
+                                   "Create\nHouse\n 2⭐", createHouse, "black")
+                buttonList.append(createHouseButton)
+    else:
+        app.targetTile = None
+    return buttonList
+
+
+def cityCheck(app):
+    x = app.tile.x
+    y = app.tile.y
+    for dx in range(-1, 2):
+        for dy in range(-1, 2):
+            newX = x + dx
+            newY = y + dy
+            if newX < 0 or newX >= app.mapSize or newY < 0 or newY >= app.mapSize:
+                continue
+            targetTile = app.game.map[(newX, newY)]
+            if isinstance(targetTile, City):
+                if targetTile in app.game.currentPlayer.currentCities:
+                    return True, targetTile
+    return False, None
 
 ################################################################################
 

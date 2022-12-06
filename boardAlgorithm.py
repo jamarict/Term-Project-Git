@@ -105,7 +105,8 @@ def tileSelector(app, x, y):
         createImage(app, tile)
         return tile
     
-# Creates images for all respective tiles
+# Creates images for all respective tiles. Set them to be proportional to their
+# width and the app's height
 # Map Images from:
 # http://mercenarylight.synthasite.com/fire-emblem-sprites.php
 def createImage(app, tile):

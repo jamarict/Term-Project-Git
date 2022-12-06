@@ -14,9 +14,6 @@ def appStarted(app):
     app.cx = app.width/2
     app.cy = app.height/2
     app.margin = (app.width - app.height)/2
-    app.xScalar = (0.25, 0.5, 0.75, 1/11, 1/6, 10/12, 1/10, 9/10)
-    app.yScalar = (11/14, 1/11, 2/15, 1/7, 3/5, 1/28, 5/24, 3/8, 7/24, 
-                   1/10, 9/10, 3/20, 9/40, 19/40, 11/15, 12/15, 13/15)
 
     makeInitialButtons(app)
     

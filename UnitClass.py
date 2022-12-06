@@ -42,7 +42,9 @@ class Unit(object):
         self.health = 10
         self.maxHealth = 10
         
-        self.name = "W"
+        # From 
+        # https://emojidb.org/sword-emojis
+        self.name = "⚔️"
         self.title = "Warrior"
 
     def __repr__(self):
@@ -53,7 +55,7 @@ class Unit(object):
         r = 3
         canvas.create_oval(x0+r, y0+r, x1-r, y1-r, fill = self.color, width = 3,
                                                          outline = self.outline)
-        canvas.create_text((x0+x1)/2, (y0+y1)/2, text = self.name)
+        canvas.create_text((x0+x1)/2, (y0+y1)/2, text = self.name, font = "30")
 
 ################################################################################
 #Special Units have higher cost and different stats from the basic units
@@ -70,8 +72,9 @@ class Archer(Unit):
         self.range = 2
         
         self.defense = 1
-        
-        self.name = "A"
+        # From
+        # https://emojipedia.org/bow-and-arrow/
+        self.name = "🏹"
         self.title = "Archer"
 
 # Riders have increased movement and lower defense. They traverse the map with
@@ -87,7 +90,9 @@ class Rider(Unit):
         
         self.defense = 1
         
-        self.name = "R"
+        # From
+        # https://emojipedia.org/horse/
+        self.name = "🐎"
         self.title = "Rider"
 
 # Defenders have increased defense with lower attack. They are great for soaking
@@ -104,7 +109,9 @@ class Defender(Unit):
         self.health = 15
         self.maxHealth = 15
         
-        self.name = "D"
+        # From 
+        # https://emojings.com/shield/#:~:text=What%20does%20the%20%F0%9F%9B%A1%20%EF%B8%8F%20Shield%20emoji%20mean,shape%20with%20simple%20pattern%20and%20a%20metal%20border.
+        self.name = "🛡"
         self.title = "Defender"
 
 
