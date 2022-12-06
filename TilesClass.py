@@ -1,50 +1,59 @@
 import random
 from cmu_112_graphics import *
 ################################################################################
+# Tiles make up the map of the game.
 
-# All tile information from:
+# Tile information from:
 # https://polytopia.fandom.com/wiki/Terrain 
-
-# Tiles make up the map of the game. No matter what kind of Tile, grid position
-# and unit status on tile should be stored
+# https://polytopia.fandom.com/wiki/Map_Generation
+################################################################################
+# Generic Tile on which all tiles are built upon. Position determines place on
+# board
 class Tile(object):
-    image = None
+    # ALl tiles are representative image
+
     def __init__(self, x, y):
+        # Position stored as (x,y) coordinate
         self.x = x
         self.y = y
+        self.image = None
+
+
+        # Tiles have the potential to contain resources
         self.resource = None
-        
-        #Initialize every Tile as not having a unit on them
 
     def __repr__(self):
-        return f"{self.name}"
+        return self.name
     
-    def redraw(self, app, canvas, x0, y0, x1, y1, sprite):
-        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(sprite))
-        canvas.create_rectangle(x0, y0, x1, y1, width = 1, fill = None, outline = "black")
+    #units redraw themselves based on getCellBounds outputs
+    def redraw(self, app, canvas, x0, y0, x1, y1):
+        canvas.create_image((x0+x1)/2, (y0+y1)/2, image = 
+                                                 ImageTk.PhotoImage(self.image))
+        canvas.create_rectangle(x0, y0, x1, y1, width = 1, fill = None, 
+                                                              outline = "black")
         if self.resource != None:
             canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
 
 
-# Field Tiles contain specific resources & can have certain buildings built
-# on them
+# Field Tiles contain resources and can have houses built on them
 class Field(Tile):
-    image = None
-    house = None
 
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "pale green"
         self.name = "Field"
         self.resource = self.spawnResources()
+        self.house = None
+
+        # Fields do no have houses to start
         self.hasHouse = False
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
+        super().redraw(app, canvas, x0, y0, x1, y1)
         if self.hasHouse == True:
             canvas.create_image((x0+x1)/2, (y0+y1)/2, image = ImageTk.PhotoImage(self.house))
 
-    # Self-contained functions to determin resource, different for each Tile
+    # Self-contained function to determine resource, different for each Tile
+    # Based on random number generation
     def spawnResources(self):
         num = random.random()
         if (0 <= num < 0.28):
@@ -55,90 +64,81 @@ class Field(Tile):
             return "crop"
         else:
             return None
-            
 
-    
 
-# Mountain Tiles hold fewer resources & should make certain player movements
-# harder
+# Mountain Tiles hold less resources than fields and forests
 class Mountain(Tile):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "grey"
         self.name = "Mountain"
         self.resource = self.spawnResources()
-
-    def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
     def spawnResources(self):
         num = random.random()
-        if (0 <= num < 0.50):
+        if (0 <= num < 0.33):
             self.name = self.name + " metal"
             return "metal"
         else:
             return None
 
-# Forest Tiles hold their spcific resources and can be altered depending on
-# player upgrades
+# Forest Tiles hold less resources than fields
 class Forest(Tile):
-    image = None
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.color = "forest green"
         self.name = "Forest"
         self.resource = self.spawnResources()
 
-    def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
-        
-
     def spawnResources(self):    
         num = random.random()
-        if (0 <= num < 0.33):
+        if (0 <= num < 0.40):
             self.name = self.name + " animal"
             return "animal"
         else:
             return None
 
-# Villages can be considered "pre-cities". They do not belong to a specific player
-# and can be conquered. Once conquered, they become cities.
+# Villages can be considered "pre-cities". They do not belong to a specific 
+# player and can be conquered. Once conquered, they become cities.
 class Village(Tile):
-    image = None
     def __init__(self, x, y):
         super().__init__(x,y)
-        self.color = "burlywood"
         self.name = "Village"
 
-    def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
         
 # Cities are owned by player. Cities have specific levels, give players stars,
 # and level up.
 class City(Tile):
-    image = None
     def __init__(self, x, y):
         super().__init__(x, y)
         self.level = 1
+        
+        # Pop to Next Level: How many resources you need to level up your city.
+        # Resources are gained by harvesting resources or creating houses
         self.popToNextLevel = 2
+
+        # Cities give stars per turn and add to the player's currency
         self.starsPerTurn = 1
+
+        #Cities can make max 1 unit each turn.
+        self.canMakeUnits = False
+
         self.name = "City"
-        self.canMakeUnits = True
+        self.color = "pink"
+
 
     def redraw(self, app, canvas, x0, y0, x1, y1):
-        super().redraw(app, canvas, x0, y0, x1, y1, self.image)
-        canvas.create_rectangle(x0, y0,x1, y1, width = 4, fill = None, outline = self.color)
+        super().redraw(app, canvas, x0, y0, x1, y1)
+        #Cities have the player's color outlined to show ownership
+        canvas.create_rectangle(x0, y0,x1, y1, width = 4, fill = None, 
+                                                          outline = self.color)
 
 
 
-# Capitals are a special kind of city. Like the "home-base", each player starts with
-# one capital per game and can not build any new ones. They give 2 stars/turn
+# Capitals are like "home-base" cities. Each player starts with one capital per 
+# game and can not build any new ones.
 class Capital(City):
-    image = None
     def __init__(self, x, y):
         super().__init__(x, y)
         self.starsPerTurn = 2
         self.name = "Capital"
-        self.color = "yellow"
 
 

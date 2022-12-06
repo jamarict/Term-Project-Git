@@ -10,7 +10,7 @@ class Button(object):
         self.color = color
 
 
-    def redraw(self, app, canvas): # Button share text drawing
+    def redraw(self, app, canvas): # Draw Button Text
         canvas.create_text(self.x, self.y, text = f"{self.text}", 
                            font = "FixedSys 20", fill = self.color)
 
@@ -27,6 +27,7 @@ class CircleButton(Button):
             self.functionCall(app)
             return True
             
+    # Calls function asssigned to button
     def functionCall(self, app):
         self.f(app)
 
@@ -61,6 +62,7 @@ class RectangleButton(Button):
         super().redraw(app, canvas)
 
 ################################################################################
+# Buttons Specific for Setting Game
 
 class ParameterCircButton(CircleButton):
     def __init__(self, x, y, r, text, function, number, color):
@@ -70,7 +72,7 @@ class ParameterCircButton(CircleButton):
     def functionCall(self, app):
         self.f(app, self.numSet)
 
-class ParameterRectButton(RectangleButton): # Converting to Map Metrics
+class ParameterRectButton(RectangleButton):
     def __init__(self, x, y, width, height, text, function, number, color):
         super().__init__(x, y, width, height, text, function, color)
         self.numSet = number
@@ -84,15 +86,13 @@ class ParameterRectButton(RectangleButton): # Converting to Map Metrics
             self.text = "Large"
             self.numSet = 19
 
-
     def functionCall(self, app):
         self.f(app, self.numSet, self.text)
 
 ################################################################################
+# Button Functions
 
-#Button Functions
-
-def goToSetup(app): # Reset going back to Title
+def goToSetup(app): # Reset going to Setup Screen
     app.playerNum = 0
     app.mapSize = 0
     app.mapText = "No"
@@ -108,10 +108,10 @@ def goToHelp(app):
 def goToSettings(app):
     app.mode = "settingsScreenMode"
 
-def setParameter(app, number):
+def setParameter(app, number): #Sets player number
     app.playerNum = number
 
-def setMapSize(app, number, text):
+def setMapSize(app, number, text): #Sets map size and display text
     app.mapText = text
     app.mapSize = number
 
@@ -141,13 +141,14 @@ def startGame(app): # Check Pre-Game Conditions
         if app.playerNum == 0:
             app.suggestionText = "Select Players"
             return
-    if app.playerNum == 1: # Make single-player game w/CPU
-        app.game = vsCPU(app, 1, app.mapSize)
+    # Make single-player game w/CPU
+    if app.playerNum == 1: 
+        app.game = vsCPU(app)
     else: # Make local multiplayer game
-        app.game = multiplayer(app, app.playerNum, app.mapSize)
+        app.game = multiplayer(app)
     app.mode = "inPlayScreenMode"
 
-def endTurn(app):
+def endTurn(app): #Transition to next player
     if app.mode != "inPlayScreenMode":
         app.mode = "inPlayScreenMode"
     app.game.changeTurn(app)
@@ -160,18 +161,18 @@ def attackUnit(app):
     app.mode = "unitAttackMode"
     app.buttonHub = []
 
-def createUnit(app):
+def createUnit(app): # Sets up Screen to make units
     app.mode = "createUnitsMode"
     app.buttonHub = makeUnitsHub(app)
 
-
-def captureCity(app):
+def captureCity(app): # Adds city to player's city list and deactivates unit
     app.game.currentPlayer.addCity(app, app.game, app.tile)
     app.clickedUnit.outline = "black"
     app.clickedUnit.canAct = False
     app.clickedUnit.canMove = False
     app.buttonHub = []
 
+# Harvest resource on specific tile and adds to the city's level
 def harvestResource(app):
     if app.game.currentPlayer.currency >= 1:
         app.game.currentPlayer.currency -= 1
@@ -182,10 +183,11 @@ def harvestResource(app):
             app.targetTile.starsPerTurn += 1
             app.targetTile.popToNextLevel = app.targetTile.level + 1
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
     app.buttonHub = []
 
+
+# Creates a house on the specific tile and adds to the city's level
 def createHouse(app):
     if app.game.currentPlayer.currency >= 2 and app.tile.hasHouse == False:
         app.game.currentPlayer.currency -= 2
@@ -197,82 +199,173 @@ def createHouse(app):
             app.targetTile.starsPerTurn += 1
             app.targetTile.popToNextLevel = app.targetTile.level + 1 - extra
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
     app.buttonHub = []
 
+################################################################################
+###
+def makeInitialButtons(app):
+    bigDimensions = 70
+    endDimensions = 50
 
+    playGameX = app.width * 1/4
+    playGameY = app.height * 11/14
+    app.buttonPlayGame = CircleButton(playGameX, playGameY, bigDimensions,
+                                                "Play\nGame", goToSetup, "red4")
+
+    helpX = app.width * 1/2
+    helpY = app.height * 11/14
+    app.buttonHelp = CircleButton(helpX, helpY, bigDimensions, "Help", goToHelp,
+                                                                        "Gold3")
+
+    settingX = app.width * 3/4
+    settingY = app.height * 11/14
+    app.buttonSetting = CircleButton(settingX, settingY, bigDimensions, 
+                                       "Settings", goToSettings, "midnightblue")
+
+    titleX = app.width * 1/4
+    titleY = app.height * 11/14
+    app.buttonTitle = CircleButton(titleX, titleY, bigDimensions,
+                                          "Back to\n Title", goToTitle, "black")
+
+    startX = app.width * 3/4
+    startY = app.height * 11/14
+    app.buttonStartGame = CircleButton(startX, startY, bigDimensions, 
+                                           " Start\n Game", startGame, "green4")
+
+    endX = app.width * 4/30
+    endY = app.height * 23/30
+    app.buttonEndTurn = CircleButton(endX, endY, endDimensions, "End\nTurn",
+                                                               endTurn, "white")
+
+    gameOverY = app.height * 7/8
+    gameOverWidth = 125
+    gameOverHeight = 50
+    app.gameOverButton = RectangleButton(app.cx, gameOverY, gameOverWidth, 
+                            gameOverHeight, "Back To Title", goToTitle, "white")
+    
+    numDimensions = 40
+    buttonRows = 3
+    buttonCols = 2
+    makeNumberButtons(app, numDimensions, buttonRows, buttonCols)
+
+    sizeWidth = 1/11
+    sizeHeight = 1/28
+    makeSizeButtons(app, buttonRows, sizeWidth, sizeHeight)
+
+
+
+def makeNumberButtons(app, dim, rows, cols):
+    rowRef = app.width * 1/4
+    colRef1 = app.height * 2/15
+    colRef2 = app.height * 1/7
+    app.setupButtons = []
+    for col in range(1, cols + 1):
+        for row in range(1, rows+ 1):
+            num = row + 3 * (col - 1)
+            button = ParameterCircButton(rowRef * row, colRef1 * col + colRef2,
+                                    dim, f"{num}", setParameter, num, "red4")
+            app.setupButtons.append(button)
+
+def makeSizeButtons(app, rows, width, height):
+    posX = app.width * 1/4
+    posY = app.height * 3/5
+    for row in range(1, rows + 1):
+        button = ParameterRectButton(posX * row, posY, app.width * width, 
+                         app.height * height, f"{row}", setMapSize, row, "red4")
+        app.setupButtons.append(button)
+
+
+################################################################################
+
+# Makes the pressable button hub for selecting a new unit
 def makeUnitsHub(app):
     buttonList = []
+    width = 90
+    height = 150
+    leftX = app.width*64/80
+    upperY = app.height*5/20
+    rightX = app.width*74/80
+    lowerY = app.height*15/20
+    
     warrior = Unit(-1,-1)
-    createWarriorButton = RectangleButton(app.width*64/80, app.height*5/20, 90, 150 , f"""Create\nWarrior\n\nCost:{warrior.cost}⭐
-Health:{warrior.health}\nMovement:{warrior.movement}\nRange:{warrior.range}\nAttack:{warrior.attack}\nDefense:{warrior.defense}""", createWarrior, "black")
+    createWarriorButton = RectangleButton(leftX, upperY, width, height, 
+                       makeUnitText(warrior, "Warrior"), createWarrior, "black")
     buttonList.append(createWarriorButton)
+    
     archer = Archer(-1, -1)
-    createArcherButton = RectangleButton(app.width*74/80, app.height*5/20, 90, 150 , f"""Create\nArcher\n\nCost:{archer.cost}⭐
-Health:{archer.health}\nMovement:{archer.movement}\nRange:{archer.range}\nAttack:{archer.attack}\nDefense:{archer.defense}""", createArcher, "black")
+    createArcherButton = RectangleButton(rightX, upperY, width, height , 
+                          makeUnitText(archer, "Archer"), createArcher, "black")
     buttonList.append(createArcherButton)
+    
     rider = Rider(-1,-1)
-    createRiderButton = RectangleButton(app.width*64/80, app.height*15/20, 90, 150 , f"""Create\nRider\n\nCost:{rider.cost}⭐
-Health:{rider.health}\nMovement:{rider.movement}\nRange:{rider.range}\nAttack:{rider.attack}\nDefense:{rider.defense}""", createRider, "black")
+    createRiderButton = RectangleButton(leftX, lowerY, width, height, 
+                             makeUnitText(rider, "Rider"), createRider, "black")
     buttonList.append(createRiderButton)
+    
     defender = Defender(-1,-1)
-    createDefenderButton = RectangleButton(app.width*74/80, app.height*15/20, 90, 150 , f"""Create\nDefender\n\nCost:{defender.cost}⭐
-Health:{defender.health}\nMovement:{defender.movement}\nRange:{defender.range}\nAttack:{defender.attack}\nDefense:{defender.defense}""", createDefender, "black")
+    createDefenderButton = RectangleButton(rightX, lowerY, width, height, 
+                    makeUnitText(defender, "Defender"), createDefender, "black")
     buttonList.append(createDefenderButton)
     return buttonList
-    
 
+#Functions to create and place specific units
 def createWarrior(app):
     if app.game.currentPlayer.currency >= Unit(-1,-1).cost:
         app.game.currentPlayer.currency -= Unit(-1,-1).cost
+        player = app.game.currentPlayer
         city = app.tile
         newWarrior = Unit(city.x, city.y)
-        newWarrior.color = city.color
-        app.game.currentPlayer.currentUnits.append(newWarrior)
-        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        changeUnit(player, app.game, city, newWarrior)
         city.canMakeUnits = False
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
 
 def createArcher(app):
     if app.game.currentPlayer.currency >= Archer(-1,-1).cost:
         app.game.currentPlayer.currency -= Archer(-1,-1).cost
+        player = app.game.currentPlayer
         city = app.tile
-        newWarrior = Archer(city.x, city.y)
-        newWarrior.color = city.color
-        app.game.currentPlayer.currentUnits.append(newWarrior)
-        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        newArcher = Archer(city.x, city.y)
+        changeUnit(player, app.game, city, newArcher)
         city.canMakeUnits = False
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
 
     
 def createRider(app):
     if app.game.currentPlayer.currency >= Rider(-1,-1).cost:
         app.game.currentPlayer.currency -= Rider(-1,-1).cost
+        player = app.game.currentPlayer
         city = app.tile
-        newWarrior = Rider(city.x, city.y)
-        newWarrior.color = city.color
-        app.game.currentPlayer.currentUnits.append(newWarrior)
-        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        newRider = Rider(city.x, city.y)
+        changeUnit(player, app.game, city, newRider)
         city.canMakeUnits = False
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
 
 
 def createDefender(app):
     if app.game.currentPlayer.currency >= Defender(-1,-1).cost:
         app.game.currentPlayer.currency -= Defender(-1,-1).cost
+        player = app.game.currentPlayer
         city = app.tile
-        newWarrior = Defender(city.x, city.y)
-        newWarrior.color = city.color
-        app.game.currentPlayer.currentUnits.append(newWarrior)
-        app.game.unitsOnBoard[(city.x, city.y)] = newWarrior
+        newDefender = Defender(city.x, city.y)
+        changeUnit(player, app.game, city, newDefender)
         city.canMakeUnits = False
     else:
-        app.tip = "Not Enough Stars"
-        app.displayTip = True
+        showTip(app, "Not Enough Stars")
+
+# Generates display text based off of unit
+def makeUnitText(unit, name):
+    return f"""Create
+{name}
+
+Cost:{unit.cost}⭐
+Health:{unit.health}
+Movement:{unit.movement}
+Range:{unit.range}
+Attack:{unit.attack}
+Defense:{unit.defense}"""
+
+
