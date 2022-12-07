@@ -210,7 +210,7 @@ def calculateDamage(app, attacker, defender, dx, dy):
             attacker.health -= defenseResult
         else:
              # Archers take extra damage for attacking at close range
-            if rangeDiff <= 1 or dx == dy:
+            if rangeDiff == 1 or dx == dy == 1:
                 attacker.health -= roundHalfUp(defenseResult * 1.5)
         if attacker.health <= 0: #get rid of dead friendly unit
             app.game.currentPlayer.currentUnits.remove(attacker)
