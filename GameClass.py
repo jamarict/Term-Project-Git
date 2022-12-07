@@ -205,14 +205,12 @@ def calculateDamage(app, attacker, defender, dx, dy):
             if defender in player.currentUnits:
                 player.currentUnits.remove(defender)
     else:
-        if attacker.range == defender.range: # Calculate retaliation damage
+        if attacker.range <= defender.range: # Calculate retaliation damage
             attacker.health -= defenseResult
         else:
              # Archers take extra damage for attacking at close range
             if rangeDiff <= 1 or dx == dy:
                 attacker.health -= roundHalfUp(defenseResult * 1.5)
-            else: # Archers take no damage if the unit is not in range
-                return
         if attacker.health <= 0: #get rid of dead friendly unit
             app.game.currentPlayer.currentUnits.remove(attacker)
             del app.game.unitsOnBoard[(attacker.x, attacker.y)]
