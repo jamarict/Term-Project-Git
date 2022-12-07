@@ -97,4 +97,11 @@ meaningful unit functions + end-game functionality. From there, add more unit
 types & import sprites to improve UI and UX.
 
 TP3 Update:
-Since TP2, I have implemented tile sprites and unit emoji to offer better visual display. Unit movement and combat now exists that depends on mouse clicks. Additional unit archetypes have been added to diversify player options. Damage calculation from Polytopia has been added to offer unique combat. Game instructions have been added to clear up information for new players. Unit and City metrics are displayed so players have information when making decisions. End Game functionality implemented that removes "out" players and ends game when 1 player is left.
+Since TP2, I have implemented tile sprites and unit emojis to offer better visual 
+display. Unit movement and combat now exists that depends on mouse clicks. 
+Additional unit archetypes have been added to diversify player options. Damage 
+calculation from Polytopia has been added to offer unique combat. Game instructions 
+have been added to clear up information for new players. Unit and City metrics 
+are displayed so players have information when making decisions. End Game 
+functionality implemented that removes "out" players and ends game when 1 player 
+is left.
