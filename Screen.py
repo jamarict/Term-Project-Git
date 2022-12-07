@@ -125,6 +125,8 @@ def drawInPlayScreen(app, canvas):
                                             font = "FixedSys 20 bold", 
                                             fill = app.game.currentPlayer.color)
     
+    # Star From
+    # https://emojipedia.org/star/
     canvas.create_text(textcx,text4Y, 
                         text = f"Currency:{app.game.currentPlayer.currency}⭐", 
                         font = "FixedSys 15 bold", fill = "gold2")

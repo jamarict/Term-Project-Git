@@ -30,7 +30,7 @@ class GameObject(object):
     def __repr__(self):
         return f"{type(self)}"
     
-    def changeTurn(self, app): #changes player turns
+    def changeTurn(self, app): # Changes player turns
         app.targetTile = None
         switchUnitsOff(self.currentPlayer)
         self.currentPlayerNum = (self.currentPlayerNum+1) % len(self.playerList)
@@ -44,7 +44,7 @@ class GameObject(object):
         else:
             return self.map[(x, y)]
     
-    def getUnit(self, x, y): #Gets unit from  dictionary, using x,y coordinates
+    def getUnit(self, x, y): # Gets unit from  dictionary, using x,y coordinates
         if (x, y) not in self.unitsOnBoard:
             return None
         else:
@@ -52,12 +52,12 @@ class GameObject(object):
 
 ################################################################################
 
-class vsCPU(GameObject):
+class vsCPU(GameObject): # for single player game
     def __init__(self, app):
         app.playerNum += 1
         super().__init__(app)
 
-class multiplayer(GameObject):
+class multiplayer(GameObject): # For local multiplayer game
     def __init__(self, app):
         super().__init__(app)
 
@@ -186,6 +186,8 @@ def calculateDamage(app, attacker, defender, dx, dy):
             app.game.currentPlayer.currentUnits.remove(attacker)
             del app.game.unitsOnBoard[(attacker.x, attacker.y)]
 
+# From
+# https://www.cs.cmu.edu/~112/notes/notes-variables-and-functions.html#RecommendedFunctions
 def roundHalfUp(d):
     # Round to nearest with ties going away from zero.
     # You do not need to understand how this function works.

@@ -105,10 +105,13 @@ def tileSelector(app, x, y):
         createImage(app, tile)
         return tile
     
+################################################################################
+
 # Creates images for all respective tiles. Set them to be proportional to their
 # width and the app's height
 # Map Images from:
 # http://mercenarylight.synthasite.com/fire-emblem-sprites.php
+# https://www.cs.cmu.edu/~112/notes/notes-animations-part4.html
 def createImage(app, tile):
     if isinstance(tile, Capital):
         capitalImage1 = app.loadImage("images/CapitalTile.png")

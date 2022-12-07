@@ -116,6 +116,8 @@ def inPlayScreenMode_mousePressed(app, event):
     else:
         app.buttonHub = makeButtonHub(app)   
 
+# Sleep From
+# https://www.bitdegree.org/learn/python-time
 def inPlayScreenMode_timerFired(app):
     app.timerDelay = 1000
     checkPlayers(app)

@@ -96,6 +96,8 @@ class Forest(Tile):
         else:
             return None
 
+################################################################################
+
 # Villages can be considered "pre-cities". They do not belong to a specific 
 # player and can be conquered. Once conquered, they become cities.
 class Village(Tile):

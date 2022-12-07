@@ -203,7 +203,7 @@ def createHouse(app):
     app.buttonHub = []
 
 ################################################################################
-
+# Makes initial game buttons
 def makeInitialButtons(app):
     bigDimensions = 70
     endDimensions = 50
@@ -247,10 +247,13 @@ def makeInitialButtons(app):
     numDimensions = 40
     buttonRows = 3
     buttonCols = 2
+    #Use iteration to create number buttons
     makeNumberButtons(app, numDimensions, buttonRows, buttonCols)
+    
 
     sizeWidth = 1/11
     sizeHeight = 1/28
+    #Use iteration to create sizing buttons
     makeSizeButtons(app, buttonRows, sizeWidth, sizeHeight)
 
 def makeNumberButtons(app, dim, rows, cols):
@@ -275,7 +278,7 @@ def makeSizeButtons(app, rows, width, height):
 
 
 ################################################################################
-
+# Creates In-Game Buttons based on collected unit information
 def makeButtonHub(app):
     buttonDims = 80
     buttonList = []
@@ -289,23 +292,29 @@ def makeButtonHub(app):
     posY2 = app.height * 10/20
     posY3 = app.height * 17/20
 
+    # If clicked square contains valid unit and they unit are the specific player's
     if unit != None and unit in app.game.currentPlayer.currentUnits:
         app.clickedUnit = unit
-        if unit.canAct == False:
+        if unit.canAct == False: #Disregard Unit if it can't act
             pass
         else:
-            if unit.canMove == True:
+            if unit.canMove == True: # Make movement if they can move
                 moveUnitButton = CircleButton(posX1, posY1, buttonDims, 
                                                 "Move\nUnit", moveUnit, "black")
                 buttonList.append(moveUnitButton)
+            
+            # Always display attack and handle conditions later on
             attackUnitButton = CircleButton(posX2, posY1, buttonDims, 
                                            "Attack\n Unit", attackUnit, "black")
             buttonList.append(attackUnitButton)
+
+            # Show capture city if unit is on an enemy city or empty village
             if (((isinstance(app.tile,City)) and (app.tile not in app.game.currentPlayer.currentCities)) 
                 or isinstance(app.tile, Village)):
                 captureCityButton = CircleButton(posX1, posY2, buttonDims, 
                                          "Capture\n City", captureCity, "black")
                 buttonList.append(captureCityButton)
+    # If clicked tile is a city, show making the city
     if isinstance(app.tile, City):
         if (x,y) in app.game.unitsOnBoard:
             pass
@@ -316,22 +325,22 @@ def makeButtonHub(app):
                                            "Create\n Unit", createUnit, "black")
             buttonList.append(createUnitButton)
     value, tile = cityCheck(app)
-    if value == True:
+    if value == True: # Nearby City is found
         app.targetTile = tile
-        if tile.resource != None:
+        if tile.resource != None: # Make resource button if a resource exists
             harvestResourceButton = CircleButton(posX1, posY3, buttonDims, 
                           "Harvest\nResource\n  1⭐", harvestResource, "black")
             buttonList.append(harvestResourceButton)
-        if isinstance(app.tile, Field):
+        if isinstance(app.tile, Field): # Make house button is field tile is empty
             if app.tile.hasHouse == False:
                 createHouseButton = CircleButton(posX2, posY3, buttonDims, 
                                    "Create\nHouse\n 2⭐", createHouse, "black")
                 buttonList.append(createHouseButton)
-    else:
+    else: # No Nearby Cities to give information on
         app.targetTile = None
     return buttonList
 
-
+# Checks if there is a nearby city around the specific Tile
 def cityCheck(app):
     x = app.tile.x
     y = app.tile.y
@@ -403,7 +412,6 @@ def createArcher(app):
     else:
         showTip(app, "Not Enough Stars")
 
-    
 def createRider(app):
     if app.game.currentPlayer.currency >= Rider(-1,-1).cost:
         app.game.currentPlayer.currency -= Rider(-1,-1).cost
@@ -414,7 +422,6 @@ def createRider(app):
         city.canMakeUnits = False
     else:
         showTip(app, "Not Enough Stars")
-
 
 def createDefender(app):
     if app.game.currentPlayer.currency >= Defender(-1,-1).cost:
