@@ -4,7 +4,7 @@ import time
 ################################################################################
 
 def appStarted(app):
-    #Image Info
+    # Image Info
     # From
     # https://wallhere.com/en/wallpaper/1929717
     app.imageTitleScreen = app.loadImage("images/openBackground.jpeg")

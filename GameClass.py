@@ -1,5 +1,6 @@
-from BoardAlgorithm import *
+from boardAlgorithm import *
 from UnitClass import *
+from TilesClass import *
 ################################################################################
 # Game Objects that handles certain game functions
 
