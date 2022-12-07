@@ -24,6 +24,8 @@ class GameObject(object):
             unit = Unit(capital.x, capital.y)
             changeUnit(player, self, capital, unit)
 
+        removeResources(self.map)
+
         # Change units status and player status
         switchUnitsOn(self.currentPlayer)
         
@@ -137,6 +139,35 @@ def showTip(app, text):
 
 ################################################################################
 
+# Removes resources that are not around any nearby cities
+def removeResources(gameMap):
+    for item in gameMap:
+        tile = gameMap[item]
+        if tile.resource == None:
+            continue
+        if modifiedCityCheck(gameMap, tile):
+            pass
+        else:
+            tile.resource = None
+
+# Check to see if there is a nearby city
+def modifiedCityCheck(gameMap, tile):
+    x = tile.x
+    y = tile.y
+    size = len(gameMap)**0.5
+    for dx in range(-1, 2):
+        for dy in range(-1,2):
+            newX = x +dx
+            newY = y + dy
+            if newX < 0 or newX >= size or newY < 0 or newY >= size:
+                continue
+            targetTile = gameMap[(newX, newY)]
+            if isinstance(targetTile, City) or isinstance(targetTile, Village):
+                return True
+    return False
+
+################################################################################
+
 #Checks combat conditions and adjusts app screens
 def runCombat(app, player, enemy):
     # Check enemy exists and is on board
@@ -206,7 +237,7 @@ def moveUnit(app, player, row, col):
         showTip(app, "Invalid Move") 
     elif (row,col) in app.game.unitsOnBoard: # Can't move to occupied space
         app.mode = "inPlayScreenMode"
-        showTip("Space Occupied")
+        showTip(app, "Space Occupied")
     elif row == -1 or col == -1: # Can't move off screen
         app.mode = "inPlayScreenMode"
         showTip(app, "Invalid Move")
@@ -219,6 +250,9 @@ def moveUnit(app, player, row, col):
         player.canMove = False
         player.outline = "gray"
         app.mode = "inPlayScreenMode"
+    else:
+        app.mode = "inPlayScreenMode"
+        showTip(app, "Invalid Move")
     
 ################################################################################
 # Timer Fired Functions to check player and game status

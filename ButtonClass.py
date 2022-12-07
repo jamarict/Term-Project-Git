@@ -146,6 +146,12 @@ def startGame(app): # Check Pre-Game Conditions
         app.game = vsCPU(app)
     else: # Make local multiplayer game
         app.game = multiplayer(app)
+    app.mode = "gameDebriefMode"
+
+def goToQuestion(app):
+    app.mode = "gameDebriefMode"
+
+def initiateGame(app):
     app.mode = "inPlayScreenMode"
 
 def endTurn(app): #Transition to next player
@@ -153,7 +159,7 @@ def endTurn(app): #Transition to next player
         app.mode = "inPlayScreenMode"
     app.game.changeTurn(app)
 
-def moveUnit(app):
+def movingUnit(app):
     app.mode = "unitMoveMode"
     app.buttonHub = []
 
@@ -179,6 +185,7 @@ def harvestResource(app):
         app.tile.resource = None
         app.targetTile.popToNextLevel -= 1
         if app.targetTile.popToNextLevel == 0:
+            showTip(app, "City Level +1")
             app.targetTile.level += 1
             app.targetTile.starsPerTurn += 1
             app.targetTile.popToNextLevel = app.targetTile.level + 1
@@ -194,6 +201,7 @@ def createHouse(app):
         app.tile.hasHouse = True
         app.targetTile.popToNextLevel -= 2
         if app.targetTile.popToNextLevel <= 0:
+            showTip(app, "City Level +1")
             extra = 0 - app.targetTile.popToNextLevel
             app.targetTile.level += 1
             app.targetTile.starsPerTurn += 1
@@ -231,7 +239,7 @@ def makeInitialButtons(app):
     startX = app.width * 3/4
     startY = app.height * 11/14
     app.buttonStartGame = CircleButton(startX, startY, bigDimensions, 
-                                           " Start\n Game", startGame, "green4")
+                                           "Game\nInfo", startGame, "cyan")
 
     endX = app.width * 4/30
     endY = app.height * 23/30
@@ -243,12 +251,23 @@ def makeInitialButtons(app):
     gameOverHeight = 50
     app.gameOverButton = RectangleButton(app.cx, gameOverY, gameOverWidth, 
                             gameOverHeight, "Back To Title", goToTitle, "white")
+
+    questionX = app.width * 5/100
+    questionY = app.height * 5/100
+    questionSize = 20
+    app.questionButton = CircleButton(questionX, questionY, questionSize,
+                                                        "?", goToQuestion, "white")
     
     numDimensions = 40
     buttonRows = 3
     buttonCols = 2
     #Use iteration to create number buttons
     makeNumberButtons(app, numDimensions, buttonRows, buttonCols)
+
+    buttonX = app.width * 13/16
+    buttonY = app.height * 11/14
+    app.buttonInitiate = CircleButton(buttonX, buttonY, bigDimensions, 
+                        " Start\n Game", initiateGame, "green4")
     
 
     sizeWidth = 1/11
@@ -300,7 +319,7 @@ def makeButtonHub(app):
         else:
             if unit.canMove == True: # Make movement if they can move
                 moveUnitButton = CircleButton(posX1, posY1, buttonDims, 
-                                                "Move\nUnit", moveUnit, "black")
+                                                "Move\nUnit", movingUnit, "black")
                 buttonList.append(moveUnitButton)
             
             # Always display attack and handle conditions later on
@@ -327,7 +346,7 @@ def makeButtonHub(app):
     value, tile = cityCheck(app)
     if value == True: # Nearby City is found
         app.targetTile = tile
-        if tile.resource != None: # Make resource button if a resource exists
+        if app.tile.resource != None: # Make resource button if a resource exists
             harvestResourceButton = CircleButton(posX1, posY3, buttonDims, 
                           "Harvest\nResource\n  1⭐", harvestResource, "black")
             buttonList.append(harvestResourceButton)

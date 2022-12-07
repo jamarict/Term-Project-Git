@@ -5,9 +5,14 @@ import time
 
 def appStarted(app):
     #Image Info
+    # From
+    # https://wallhere.com/en/wallpaper/1929717
     app.imageTitleScreen = app.loadImage("images/openBackground.jpeg")
     titleScale = app.width/app.imageTitleScreen.size[0] 
     app.titleScreen = app.scaleImage(app.imageTitleScreen, titleScale)
+
+    # From
+    # https://wallhere.com/en/wallpaper/1918061
     app.gameOverImage = app.loadImage("images/FinalImage.jpg")
     
     #Positioning Info
@@ -86,18 +91,35 @@ def setupMode_mousePressed(app, event):
 
 ################################################################################
 
+# Game Debrief and Help Screen
+def gameDebriefMode_redrawAll(app, canvas):
+    drawBackground(app, canvas)
+    drawBoard(app, canvas)
+    drawUnits(app, canvas)
+    drawGameDebriefScreen(app, canvas)
+    app.buttonInitiate.redraw(app, canvas)
+
+def gameDebriefMode_mousePressed(app, event):
+    app.buttonInitiate.buttonPressed(app, event)
+
+################################################################################
+
 # In-Game Screen
 def inPlayScreenMode_redrawAll(app, canvas):
     drawInPlayScreen(app, canvas)
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
+    app.questionButton.redraw(app, canvas)
     for button in app.buttonHub:
         button.redraw(app, canvas)
     if app.displayTip:
         displayTip(app, canvas)
 
 def inPlayScreenMode_mousePressed(app, event):
+    if app.questionButton.buttonPressed(app, event):
+        app.buttonHub = []
+        return
     if app.buttonEndTurn.buttonPressed(app, event): # End turn takes priority
         app.buttonHub = []
         return
@@ -134,6 +156,7 @@ def unitMoveMode_redrawAll(app, canvas):
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
+    drawMoveSideBar(app, canvas)
 
 def unitMoveMode_mousePressed(app, event):
     (row, col) = checkClick(app, event.x, event.y)
@@ -149,6 +172,7 @@ def unitAttackMode_redrawAll(app, canvas):
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
+    drawAttackSideBar(app, canvas)
 
 def unitAttackMode_mousePressed(app, event):
     (row, col) = checkClick(app, event.x, event.y)
@@ -164,6 +188,7 @@ def createUnitsMode_redrawAll(app, canvas):
     app.buttonEndTurn.redraw(app, canvas)
     drawBoard(app, canvas)
     drawUnits(app, canvas)
+    drawCenterBar(app, canvas)
     for button in app.buttonHub:
         button.redraw(app, canvas)
 

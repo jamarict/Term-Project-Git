@@ -21,6 +21,7 @@ def drawHelpScreen(app, canvas):
     helpx1 = app.width * 9/10
     helpy0 = app.height * 1/10
     helpy1 = app.height * 9/10
+    titleTextY = app.height * 3/20
     textColor = "Gold3"
     titleTextY = app.height * 3/20
 
@@ -28,6 +29,8 @@ def drawHelpScreen(app, canvas):
     canvas.create_rectangle(helpx0, helpy0, helpx1 ,helpy1, fill = "sienna4")
     canvas.create_text(app.cx, titleTextY, text = "How To Play", 
                                     font = "FixedSys 40 bold", fill = textColor)
+    canvas.create_text(app.cx, app.cy, text = "Help Coming Soon!", 
+                       font = "FixedSys 40 bold", fill = textColor)
 
 def drawSettingsScreen(app, canvas):
     settingx0 = app.width * 1/10
@@ -91,6 +94,36 @@ def drawSetupScreen(app, canvas): # Update Screen with user input to show pre-ga
                                          font = "FixedSys 18", fill = textColor)
     canvas.create_text(app.cx,text4Y, text = app.suggestionText, 
                                     font = "FixedSys 15 bold", fill = textColor)
+
+def drawGameDebriefScreen(app, canvas): # Show Game Information For Players
+    setupx0 = app.width * 1/10
+    setupx1 = app.width * 9/10
+    setupy0 = app.height * 1/10
+    setupy1 = app.height * 9/10
+    textY = app.height * 5/10
+    infoText = """
+Welcome to Collect and Conquer:112\n
+Here are some things to keep in mind while playing:\n
+*Game Interaction: This game is meant to turn-based, pass & play with others, and you need to click with your mouse\n
+*Starting Game: Each player starts with 1 warrior and 1 city. Click on tiles around the board to see what you can do\n
+*Collecting: Click on gold coins and empty grass fields around your city. You can harvest coins or build houses to 
+increase your city level. A higher city level means MORE INCOME!\n
+*Cities: Cities provide you with income and a way to create units. Collect resources for your
+cities and defend them against other players.\n
+*Units: Players can create units that move and attack. Clicking on your cities will
+prompt you to create units. Clicking on your units will prompt them to move or attack\n
+*Conquering: Players should move units to villages (white huts) and enemy cities to capture them.
+Clicking on your unit when a capture is able will prompt them to do so\n
+*End Game: When a player loses all of their cities, they are out of the game. 
+When one player is left standing, the game is over
+
+"""
+    canvas.create_rectangle(setupx0, setupy0, setupx1, setupy1, fill = "sienna4")
+    canvas.create_text(app.cx, textY, text = infoText, font = "FixedSys 15")
+
+def drawBackground(app, canvas):
+    canvas.create_image(app.cx, app.cy, image = ImageTk.PhotoImage(app.titleScreen))
+    
 
 def drawInPlayScreen(app, canvas):
     totalStarsPerTurn = 0
@@ -168,6 +201,94 @@ Level Up: {app.targetTile.popToNextLevel}
         canvas.create_text(textcx, textInfoY, text = unitText, 
                                            font = "FixedSys 17", fill = "black")
 
+def drawMoveSideBar(app, canvas): # Display Information on Movement
+    sidebarx0 = app.width * 3/4
+    sidebarx1 = app.width * 31/32
+    sidebary0 = app.height * 1/10
+    sidebary1 = app.height * 9/10
+    textY = app.height * 3/20
+    textX = app.width * ((3/4) + (31/32))/2
+    
+
+    canvas.create_rectangle(sidebarx0, sidebary0, sidebarx1, sidebary1, fill = "sienna4")
+    canvas.create_text(textX, textY, text = "Movement Help", font = "FixedSys 30 bold")
+    infoText = """
+To move, click on 
+a nearby square
+that is within 
+your unit's
+movement
+Don't forget, 
+diagonals count 
+too! If you
+make an invalid
+move, the game
+will let you
+know. If
+you don't want
+to move, click
+anywhere off
+the board"""
+    canvas.create_text(textX, app.cy, text = infoText, font = "FixedSys 20")
+
+def drawAttackSideBar(app, canvas): # Display information on Attacking
+    sidebarx0 = app.width * 3/4
+    sidebarx1 = app.width * 31/32
+    sidebary0 = app.height * 1/10
+    sidebary1 = app.height * 9/10
+    textY = app.height * 3/20
+    textX = app.width * ((3/4) + (31/32))/2
+    
+
+    canvas.create_rectangle(sidebarx0, sidebary0, sidebarx1, sidebary1, fill = "sienna4")
+    canvas.create_text(textX, textY, text = "Attack Help", font = "FixedSys 30 bold")
+    infoText = """\n
+To attack, click
+on an enemy within 
+your unit's range.
+Click off the
+board to cancel
+your attack.
+Watch your 
+attack and
+defense stats.
+Be careful,
+damage scales
+with health
+loss so 
+be mindful"""
+    canvas.create_text(textX, app.cy, text = infoText, font = "FixedSys 20")
+    
+def drawCenterBar(app, canvas): # Give some information on unit types
+    centerbarx0 = app.width * 1/3
+    centerbarx1 = app.width * 2/3
+    centerbary0 = app.height * 1/6
+    centerbary1 = app.height * 5/6
+
+    canvas.create_rectangle(centerbarx0, centerbary0, centerbarx1, centerbary1,
+                                                        fill = "sienna4")
+    infoText = """
+Warrior: Basic Unit
+A surefire unit 
+with well-rounded stats
+Cheap and Reliable!\n
+Archer: Long-Ranged Unit
+A reliable unit 
+that can attack from a distance
+Watch Out Up Close!\n
+Rider: Speedy Unit
+A fast unit 
+with great traversal
+Close The Gap!\n
+Defender: Tank Unit
+A tough unit 
+that takes a hit
+Not Great on Offense!\n
+(Click Off Board to Cancel)
+"""
+
+    canvas.create_text(app.cx, app.cy, text = infoText, fill = "black", 
+                                                font = "FixedSys 17 bold")
 
 
 def displayTip(app, canvas):

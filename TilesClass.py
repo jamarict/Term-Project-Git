@@ -17,6 +17,7 @@ class Tile(object):
         self.x = x
         self.y = y
         self.image = None
+        self.color = "black"
 
 
         # Tiles have the potential to contain resources
@@ -30,7 +31,7 @@ class Tile(object):
         canvas.create_image((x0+x1)/2, (y0+y1)/2, image = 
                                                  ImageTk.PhotoImage(self.image))
         canvas.create_rectangle(x0, y0, x1, y1, width = 1, fill = None, 
-                                                              outline = "black")
+                                                              outline = self.color)
         if self.resource != None:
             canvas.create_oval(x0+20, y0+20, x1-20, y1-20, fill = "gold")
 
@@ -104,6 +105,7 @@ class Village(Tile):
     def __init__(self, x, y):
         super().__init__(x,y)
         self.name = "Village"
+        self.color = "black"
 
         
 # Cities are owned by player. Cities have specific levels, give players stars,
